@@ -2,13 +2,11 @@ import React, { useState, useEffect } from "react";
 import { Login } from "./Login";
 import { Home } from "./Home";
 import { Landing } from "./Landing";
-import { BrowserRouter } from "react-router-dom";
-import { Routes, Route, Link, Outlet } from "react-router-dom";
+import { Routes, Route, Link } from "react-router-dom";
 import AuthService from "./auth.service";
 
-const AppLayout = () => {
-  const [currentUser, setCurrentUser] = useState(null);
-  const [textoDePrueba, setTextoDePrueba] = useState('gorbachov');
+function App() {
+  const [currentUser, setCurrentUser] = useState(undefined);
 
   useEffect(() => {
     const user = AuthService.getCurrentUser();
@@ -20,7 +18,7 @@ const AppLayout = () => {
 
   const logOut = () => {
     AuthService.logout();
-    setCurrentUser(null);
+    setCurrentUser(undefined);
   };
 
   return (
@@ -43,29 +41,14 @@ const AppLayout = () => {
           </li>
         </div>
       )}
-      {textoDePrueba}
-      <Outlet context={{ setCurrentUser, setTextoDePrueba }} />
-    </>
-  );
-};
-
-function App() {
-  return (
-    <BrowserRouter>
-      <Routes>
-        <Route
-          path="/"
-          element={<AppLayout />}
-        >
-          <Route
-            path="/login"
-            element={<Login />}
-          />
+      <div>
+        <Routes>
+          <Route path="/login" element={<Login setCurrentUser={setCurrentUser} />} />
           <Route path="/home" element={<Home />} />
           <Route path="/" element={<Landing />} />
-        </Route>
-      </Routes>
-    </BrowserRouter>
+        </Routes>
+      </div>
+    </>
   );
 }
 

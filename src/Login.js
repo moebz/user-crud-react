@@ -13,13 +13,13 @@ import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import AuthService from "./auth.service";
 
-import { useNavigate, useOutletContext } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { CircularProgress } from "@mui/material";
 
-function Login() {
+function Login({ setCurrentUser }) {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
-  const { setCurrentUser, setTextoDePrueba } = useOutletContext();
+  
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -33,13 +33,11 @@ function Login() {
 
     try {
       setLoading(true);
-      setCurrentUser(
-        await AuthService.login(
-          data.get("username"),
-          data.get("password"),
-          setCurrentUser
-        )
-      );
+      setCurrentUser(await AuthService.login(
+        data.get("username"),
+        data.get("password"),
+        setCurrentUser
+      ));
       navigate("/home");
       // window.location.reload();
     } catch (error) {
@@ -113,14 +111,6 @@ function Login() {
             >
               Sign In
             </Button>
-            <Button
-              onClick={() => setTextoDePrueba('vladimir putin')}
-              fullWidth
-              variant="contained"
-              sx={{ mt: 3, mb: 2 }}
-            >
-              setTextoDePrueba
-            </Button>            
           </Box>
         </Box>
       )}
