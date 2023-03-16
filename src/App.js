@@ -2,10 +2,16 @@ import React, { useState, useEffect } from "react";
 import { Login } from "./Login";
 import { Home } from "./Home";
 import { Landing } from "./Landing";
-import { Routes, Route, Link } from "react-router-dom";
+import { Routes, Route, Link, useNavigate, useLocation } from 'react-router-dom';
 import AuthService from "./auth.service";
+import { history } from "./history";
 
 function App() {
+  // Init custom history object to allow navigation from
+  // anywhere in the react app (inside or outside components).
+  history.navigate = useNavigate();
+  history.location = useLocation();
+
   const [currentUser, setCurrentUser] = useState(undefined);
 
   useEffect(() => {
@@ -43,7 +49,10 @@ function App() {
       )}
       <div>
         <Routes>
-          <Route path="/login" element={<Login setCurrentUser={setCurrentUser} />} />
+          <Route
+            path="/login"
+            element={<Login setCurrentUser={setCurrentUser} />}
+          />
           <Route path="/home" element={<Home />} />
           <Route path="/" element={<Landing />} />
         </Routes>
