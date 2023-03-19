@@ -56,6 +56,11 @@ const removeUser = () => {
   localStorage.removeItem("user");
 };
 
+const isLoggedIn = () => {
+  const user = getUser();
+  return Boolean(user);
+};
+
 const authService = {
   login,
   logout,
@@ -65,6 +70,7 @@ const authService = {
   updateLocalAccessToken,
   getUser,
   setUser,
+  isLoggedIn,
 };
 
 export { authService };

@@ -11,6 +11,7 @@ import {
 } from "react-router-dom";
 import { authService } from "./authService";
 import { history } from "./history";
+import { RequireAuth } from "./RequireAuth";
 
 function App() {
   // Init custom history object to allow navigation from
@@ -59,7 +60,14 @@ function App() {
             path="/login"
             element={<Login setCurrentUser={setCurrentUser} />}
           />
-          <Route path="/home" element={<Home />} />
+          <Route
+            path="/home"
+            element={
+              <RequireAuth>
+                <Home />
+              </RequireAuth>
+            }
+          />
           <Route path="/" element={<Landing />} />
         </Routes>
       </div>
