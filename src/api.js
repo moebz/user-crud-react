@@ -2,7 +2,7 @@ import axios from "axios";
 import httpStatus from "http-status";
 import TokenService from "./token.service";
 import { history } from "./history";
-import AuthService from "./auth.service";
+import { authService } from "./authService";
 
 const axiosConfig = {
   baseURL: "http://localhost:4000",
@@ -18,7 +18,7 @@ const responseSuccessInterceptor = (res) => {
 };
 
 const logoutAndRedirectToLogin = () => {
-  AuthService.logout();
+  authService.logout();
   history.navigate("/login");
 };
 

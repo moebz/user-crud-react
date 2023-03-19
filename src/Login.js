@@ -11,7 +11,7 @@ import Box from "@mui/material/Box";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
-import AuthService from "./auth.service";
+import { authService } from "./authService";
 
 import { useNavigate } from "react-router-dom";
 import { CircularProgress } from "@mui/material";
@@ -19,7 +19,6 @@ import { CircularProgress } from "@mui/material";
 function Login({ setCurrentUser }) {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
-  
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -33,13 +32,14 @@ function Login({ setCurrentUser }) {
 
     try {
       setLoading(true);
-      setCurrentUser(await AuthService.login(
-        data.get("username"),
-        data.get("password"),
-        setCurrentUser
-      ));
+      setCurrentUser(
+        await authService.login(
+          data.get("username"),
+          data.get("password"),
+          setCurrentUser
+        )
+      );
       navigate("/home");
-      // window.location.reload();
     } catch (error) {
       const resMessage =
         (error.response &&

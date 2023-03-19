@@ -1,35 +1,22 @@
 import api from "./api";
 
-const API_URL = "http://localhost:8080/api/auth/";
-
 const login = async (username, passwd) => {
-  // return await new Promise((resolve, reject) => {
-  //   const userData = {
-  //     username: 'asdf',
-  //   };
-  //   setUser(userData);
-  //   setTimeout(() => resolve(userData), 2000);
-  // });
+  const response = await api.post("/login", {
+    username,
+    passwd,
+  });
 
-  return api
-    .post("/login", {
-      username,
-      passwd,
-    })
-    .then((response) => {
-      console.log("login.response.data", response.data);
+  console.log("login.response.data", response.data);
 
-      if (response?.data?.data?.userToken) {
-        console.log("login.setInLocalStorage");
+  if (response?.data?.data?.userToken) {
+    console.log("login.setInLocalStorage");
+    setUser(response.data.data);
+  } else {
+    console.log("login.notSettingInLocalStorage");
+    throw new Error("Login didn't return necessary data");
+  }
 
-        localStorage.setItem("user", JSON.stringify(response.data.data));
-      } else {
-        console.log("login.notSettingInLocalStorage");
-        throw new Error("Login didn't return necessary data");
-      }
-
-      return response.data;
-    });
+  return response.data;
 };
 
 const logout = () => {
@@ -69,7 +56,7 @@ const removeUser = () => {
   localStorage.removeItem("user");
 };
 
-const AuthService = {
+const authService = {
   login,
   logout,
   getCurrentUser,
@@ -80,4 +67,4 @@ const AuthService = {
   setUser,
 };
 
-export default AuthService;
+export { authService };

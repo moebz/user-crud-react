@@ -2,8 +2,14 @@ import React, { useState, useEffect } from "react";
 import { Login } from "./Login";
 import { Home } from "./Home";
 import { Landing } from "./Landing";
-import { Routes, Route, Link, useNavigate, useLocation } from 'react-router-dom';
-import AuthService from "./auth.service";
+import {
+  Routes,
+  Route,
+  Link,
+  useNavigate,
+  useLocation,
+} from "react-router-dom";
+import { authService } from "./authService";
 import { history } from "./history";
 
 function App() {
@@ -15,7 +21,7 @@ function App() {
   const [currentUser, setCurrentUser] = useState(undefined);
 
   useEffect(() => {
-    const user = AuthService.getCurrentUser();
+    const user = authService.getCurrentUser();
     console.log("App.useEffect.user", user);
     if (user) {
       setCurrentUser(user);
@@ -23,7 +29,7 @@ function App() {
   }, []);
 
   const logOut = () => {
-    AuthService.logout();
+    authService.logout();
     setCurrentUser(undefined);
   };
 
