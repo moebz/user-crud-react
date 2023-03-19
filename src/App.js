@@ -12,6 +12,7 @@ import {
 import { authService } from "./authService";
 import { history } from "./history";
 import { RequireAuth } from "./RequireAuth";
+import { Users } from "./Users";
 
 function App() {
   // Init custom history object to allow navigation from
@@ -65,6 +66,14 @@ function App() {
             element={
               <RequireAuth>
                 <Home />
+              </RequireAuth>
+            }
+          />
+          <Route
+            path="/users"
+            element={
+              <RequireAuth>
+                <Users />
               </RequireAuth>
             }
           />
