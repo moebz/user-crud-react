@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, { useState, useEffect } from "react";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -17,66 +17,64 @@ import TableCell from "@mui/material/TableCell";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Title from "./Title";
+import Pagination from "@mui/material/Pagination";
 import api from "./api";
-
-// Generate Order Data
-function createData(id, date, name, shipTo, paymentMethod, amount) {
-  return { id, date, name, shipTo, paymentMethod, amount };
-}
-
-const rows = [
-  createData(
-    0,
-    "16 Mar, 2019",
-    "Elvis Presley",
-    "Tupelo, MS",
-    "VISA ⠀•••• 3719",
-    312.44
-  ),
-  createData(
-    1,
-    "16 Mar, 2019",
-    "Paul McCartney",
-    "London, UK",
-    "VISA ⠀•••• 2574",
-    866.99
-  ),
-  createData(
-    2,
-    "16 Mar, 2019",
-    "Tom Scholz",
-    "Boston, MA",
-    "MC ⠀•••• 1253",
-    100.81
-  ),
-  createData(
-    3,
-    "16 Mar, 2019",
-    "Michael Jackson",
-    "Gary, IN",
-    "AMEX ⠀•••• 2000",
-    654.39
-  ),
-  createData(
-    4,
-    "15 Mar, 2019",
-    "Bruce Springsteen",
-    "Long Branch, NJ",
-    "VISA ⠀•••• 5919",
-    212.79
-  ),
-];
 
 function preventDefault(event) {
   event.preventDefault();
 }
 
+const pageSize = 12;
+
 function Users() {
+  const [users, setUsers] = useState({
+    data: [],
+    status: "PENDING",
+  });
+
+  const [currentPage, setCurrentPage] = useState(1);
+
+  const [total, setTotal] = useState(0);
+
+  async function getUsersAndSetState(params) {
+    const result = await api.get("/users", {
+      params,
+    });
+    console.log("getUsersAndSetState.result.data", result.data);
+
+    if (result.data.data.rows) {
+      setUsers({ data: result.data.data.rows, status: "DONE" });
+    } else {
+      setUsers({ data: [], status: "DONE" });
+    }
+    setCurrentPage(params.pageNumber);
+    setTotal(parseInt(result.data.data.total, 10));
+  }
+
+  useEffect(() => {
+    getUsersAndSetState({
+      pageNumber: 1,
+      pageSize,
+    });
+  }, []);
+
+  function handlePageChange(pageNumber) {
+    getUsersAndSetState({
+      pageNumber,
+      pageSize,
+    });
+  }
+
   return (
     <Container component="main" maxWidth="xs">
       <CssBaseline />
 
       <Title>Recent Orders</Title>
+      <Pagination
+        count={total}
+        page={currentPage}
+        onChange={(event, page) => handlePageChange(page)}
+      />
       <Table size="small">
         <TableHead>
           <TableRow>
@@ -88,13 +86,13 @@ function Users() {
           </TableRow>
         </TableHead>
         <TableBody>
-          {rows.map((row) => (
+          {users.data.map((row) => (
             <TableRow key={row.id}>
-              <TableCell>{row.date}</TableCell>
-              <TableCell>{row.name}</TableCell>
-              <TableCell>{row.shipTo}</TableCell>
-              <TableCell>{row.paymentMethod}</TableCell>
-              <TableCell align="right">{`$${row.amount}`}</TableCell>
+              <TableCell>{row.firstname}</TableCell>
+              <TableCell>{row.lastname}</TableCell>
+              <TableCell>{row.username}</TableCell>
+              <TableCell>prueba</TableCell>
+              <TableCell align="right">prueba</TableCell>
             </TableRow>
           ))}
         </TableBody>
