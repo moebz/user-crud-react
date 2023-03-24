@@ -32,6 +32,8 @@ function Users() {
     status: "PENDING",
   });
 
+  const [filter, setFilter] = useState("");
+
   const [currentPage, setCurrentPage] = useState(1);
 
   const [total, setTotal] = useState(0);
@@ -55,6 +57,7 @@ function Users() {
     getUsersAndSetState({
       pageNumber: 1,
       pageSize,
+      filter,
     });
   }, []);
 
@@ -62,6 +65,15 @@ function Users() {
     getUsersAndSetState({
       pageNumber,
       pageSize,
+      filter,
+    });
+  }
+
+  function handleApplyFilter() {
+    getUsersAndSetState({
+      pageNumber: 1,
+      pageSize,
+      filter,
     });
   }
 
@@ -69,20 +81,39 @@ function Users() {
     <Container component="main" maxWidth="xs">
       <CssBaseline />
 
-      <Title>Recent Orders</Title>
+      <Title>User list</Title>
+
+      <TextField
+        margin="normal"
+        fullWidth
+        id="filter"
+        label="Filter by name, username or email"
+        onChange={(event) => setFilter(event.target.value)}
+      />
+
+      <Button
+        type="submit"
+        fullWidth
+        variant="contained"
+        sx={{ mb: 3 }}
+        onClick={handleApplyFilter}
+      >
+        Apply filter
+      </Button>
+
       <Pagination
-        count={total}
+        count={Math.ceil(total / pageSize)}
         page={currentPage}
         onChange={(event, page) => handlePageChange(page)}
       />
+
       <Table size="small">
         <TableHead>
           <TableRow>
-            <TableCell>Date</TableCell>
-            <TableCell>Name</TableCell>
-            <TableCell>Ship To</TableCell>
-            <TableCell>Payment Method</TableCell>
-            <TableCell align="right">Sale Amount</TableCell>
+            <TableCell>First name</TableCell>
+            <TableCell>Last name</TableCell>
+            <TableCell>Username</TableCell>
+            <TableCell>Email</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -91,15 +122,11 @@ function Users() {
               <TableCell>{row.firstname}</TableCell>
               <TableCell>{row.lastname}</TableCell>
               <TableCell>{row.username}</TableCell>
-              <TableCell>prueba</TableCell>
-              <TableCell align="right">prueba</TableCell>
+              <TableCell>{row.email}</TableCell>
             </TableRow>
           ))}
         </TableBody>
       </Table>
-      <Link color="primary" href="#" onClick={preventDefault} sx={{ mt: 3 }}>
-        See more orders
-      </Link>
     </Container>
   );
 }
