@@ -40,6 +40,7 @@ function Users() {
   const [total, setTotal] = useState(0);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
   const [selectedUser, setSelectedUser] = useState(null);
 
@@ -86,14 +87,33 @@ function Users() {
     setIsModalOpen(false);
   }
 
+  function handleEditModalClose() {
+    setIsEditModalOpen(false);
+  }
+
   function askForDeletionConfirmation(user) {
     setSelectedUser(user);
     setIsModalOpen(true);
   }
 
+  function showEditionForm(user) {
+    setSelectedUser(user);
+    setIsEditModalOpen(true);
+  }
+
   async function deleteUser() {
     const result = await api.delete(`/users/${selectedUser.id}`);
     setIsModalOpen(false);
+  }
+
+  async function editUser() {
+    const result = await api.put(`/users/${selectedUser.id}`, {
+      firstname: selectedUser.firstname,
+      lastname: selectedUser.lastname,
+      email: selectedUser.email,
+      username: selectedUser.username,
+    });
+    setIsEditModalOpen(false);
   }
 
   return (
@@ -134,6 +154,99 @@ function Users() {
             onClick={deleteUser}
           >
             Yes, delete it
+          </Button>
+        </Box>
+      </Modal>
+
+      <Modal
+        open={isEditModalOpen}
+        onClose={handleEditModalClose}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box
+          sx={{
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            width: 400,
+            bgcolor: "background.paper",
+            border: "2px solid #000",
+            boxShadow: 24,
+            p: 4,
+            outline: 0,
+          }}
+        >
+          <Typography id="modal-modal-title" variant="h6" component="h2">
+            Edit user
+          </Typography>
+
+          {selectedUser && (
+            <>
+              <TextField
+                value={selectedUser.username}
+                margin="normal"
+                required
+                fullWidth
+                label="Username"
+                onChange={(event) =>
+                  setSelectedUser({
+                    ...selectedUser,
+                    username: event.target.value,
+                  })
+                }
+              />
+
+              <TextField
+                value={selectedUser.firstname}
+                margin="normal"
+                fullWidth
+                label="First name"
+                onChange={(event) =>
+                  setSelectedUser({
+                    ...selectedUser,
+                    firstname: event.target.value,
+                  })
+                }
+              />
+
+              <TextField
+                value={selectedUser.lastname}
+                margin="normal"
+                fullWidth
+                label="Last name"
+                onChange={(event) =>
+                  setSelectedUser({
+                    ...selectedUser,
+                    lastname: event.target.value,
+                  })
+                }
+              />
+
+              <TextField
+                value={selectedUser.email}
+                margin="normal"
+                fullWidth
+                label="Email"
+                onChange={(event) =>
+                  setSelectedUser({
+                    ...selectedUser,
+                    email: event.target.value,
+                  })
+                }
+              />
+            </>
+          )}
+
+          <Button
+            type="submit"
+            fullWidth
+            variant="contained"
+            sx={{ mb: 3 }}
+            onClick={editUser}
+          >
+            Save changes
           </Button>
         </Box>
       </Modal>
@@ -189,6 +302,15 @@ function Users() {
                   onClick={() => askForDeletionConfirmation(row)}
                 >
                   Delete
+                </Button>
+                <Button
+                  type="submit"
+                  fullWidth
+                  variant="contained"
+                  sx={{ mb: 3 }}
+                  onClick={() => showEditionForm(row)}
+                >
+                  Edit
                 </Button>
               </TableCell>
             </TableRow>
