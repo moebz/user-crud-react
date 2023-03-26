@@ -18,6 +18,7 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Title from "./Title";
 import Pagination from "@mui/material/Pagination";
+import Modal from "@mui/material/Modal";
 import api from "./api";
 
 function preventDefault(event) {
@@ -37,6 +38,10 @@ function Users() {
   const [currentPage, setCurrentPage] = useState(1);
 
   const [total, setTotal] = useState(0);
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const [selectedUser, setSelectedUser] = useState(null);
 
   async function getUsersAndSetState(params) {
     const result = await api.get("/users", {
@@ -77,9 +82,61 @@ function Users() {
     });
   }
 
+  function handleModalClose() {
+    setIsModalOpen(false);
+  }
+
+  function askForDeletionConfirmation(user) {
+    setSelectedUser(user);
+    setIsModalOpen(true);
+  }
+
+  async function deleteUser() {
+    const result = await api.delete(`/users/${selectedUser.id}`);
+    setIsModalOpen(false);
+  }
+
   return (
     <Container component="main" maxWidth="xs">
       <CssBaseline />
+
+      <Modal
+        open={isModalOpen}
+        onClose={handleModalClose}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box
+          sx={{
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            width: 400,
+            bgcolor: "background.paper",
+            border: "2px solid #000",
+            boxShadow: 24,
+            p: 4,
+            outline: 0,
+          }}
+        >
+          <Typography id="modal-modal-title" variant="h6" component="h2">
+            Delete user
+          </Typography>
+          <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+            Are you sure you want to delete this user?
+          </Typography>
+          <Button
+            type="submit"
+            fullWidth
+            variant="contained"
+            sx={{ mb: 3 }}
+            onClick={deleteUser}
+          >
+            Yes, delete it
+          </Button>
+        </Box>
+      </Modal>
 
       <Title>User list</Title>
 
@@ -114,6 +171,7 @@ function Users() {
             <TableCell>Last name</TableCell>
             <TableCell>Username</TableCell>
             <TableCell>Email</TableCell>
+            <TableCell></TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -122,7 +180,17 @@ function Users() {
               <TableCell>{row.firstname}</TableCell>
               <TableCell>{row.lastname}</TableCell>
               <TableCell>{row.username}</TableCell>
-              <TableCell>{row.email}</TableCell>
+              <TableCell>
+                <Button
+                  type="submit"
+                  fullWidth
+                  variant="contained"
+                  sx={{ mb: 3 }}
+                  onClick={() => askForDeletionConfirmation(row)}
+                >
+                  Delete
+                </Button>
+              </TableCell>
             </TableRow>
           ))}
         </TableBody>
