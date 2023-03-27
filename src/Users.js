@@ -103,6 +103,11 @@ function Users() {
 
   async function deleteUser() {
     const result = await api.delete(`/users/${selectedUser.id}`);
+    await getUsersAndSetState({
+      pageNumber: 1,
+      pageSize,
+      filter,
+    });    
     setIsModalOpen(false);
   }
 
@@ -113,6 +118,11 @@ function Users() {
       email: selectedUser.email,
       username: selectedUser.username,
     });
+    await getUsersAndSetState({
+      pageNumber: 1,
+      pageSize,
+      filter,
+    });    
     setIsEditModalOpen(false);
   }
 
