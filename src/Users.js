@@ -41,8 +41,18 @@ function Users() {
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [isCreationModalOpen, setIsCreationModalOpen] = useState(false);
 
   const [selectedUser, setSelectedUser] = useState(null);
+
+  const [username, setUsername] = useState("");
+  const [password1, setPassword1] = useState("");
+  const [password2, setPassword2] = useState("");
+  const [firstname, setFirstname] = useState("");
+  const [lastname, setLastname] = useState("");
+  const [email, setEmail] = useState("");
+  const [selectedImage, setSelectedImage] = useState(null);
+  const imageInputRef = React.useRef();
 
   async function getUsersAndSetState(params) {
     const result = await api.get("/users", {
@@ -91,6 +101,10 @@ function Users() {
     setIsEditModalOpen(false);
   }
 
+  function handleCreationModalClose() {
+    setIsCreationModalOpen(false);
+  }
+
   function askForDeletionConfirmation(user) {
     setSelectedUser(user);
     setIsModalOpen(true);
@@ -101,13 +115,17 @@ function Users() {
     setIsEditModalOpen(true);
   }
 
+  function showCreationForm() {
+    setIsCreationModalOpen(true);
+  }
+
   async function deleteUser() {
     const result = await api.delete(`/users/${selectedUser.id}`);
     await getUsersAndSetState({
       pageNumber: 1,
       pageSize,
       filter,
-    });    
+    });
     setIsModalOpen(false);
   }
 
@@ -122,8 +140,30 @@ function Users() {
       pageNumber: 1,
       pageSize,
       filter,
-    });    
+    });
     setIsEditModalOpen(false);
+  }
+
+  async function createUser() {
+    const formData = new FormData();
+    formData.append("avatar", selectedImage);
+    formData.append("firstname", firstname);
+    formData.append("lastname", lastname);
+    formData.append("email", email);
+    formData.append("passwd", password1);
+    formData.append("username", username);
+
+    const result = await api.post("/users/", formData, {
+      headers: { "Content-Type": "multipart/form-data" },
+    });
+
+    await getUsersAndSetState({
+      pageNumber: 1,
+      pageSize,
+      filter,
+    });
+
+    setIsCreationModalOpen(false);
   }
 
   return (
@@ -261,7 +301,133 @@ function Users() {
         </Box>
       </Modal>
 
+      <Modal
+        open={isCreationModalOpen}
+        onClose={handleCreationModalClose}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box
+          sx={{
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            width: 400,
+            bgcolor: "background.paper",
+            border: "2px solid #000",
+            boxShadow: 24,
+            p: 4,
+            outline: 0,
+          }}
+        >
+          <Typography id="modal-modal-title" variant="h6" component="h2">
+            Edit user
+          </Typography>
+
+          <TextField
+            value={username}
+            onChange={(event) => setUsername(event.target.value)}
+            margin="normal"
+            required
+            fullWidth
+            label="Username"
+          />
+
+          <TextField
+            value={password1}
+            onChange={(event) => setPassword1(event.target.value)}
+            margin="normal"
+            fullWidth
+            label="Password"
+            type="password"
+          />
+
+          <TextField
+            value={password2}
+            onChange={(event) => setPassword2(event.target.value)}
+            margin="normal"
+            fullWidth
+            label="Password again"
+            type="password"
+          />
+
+          <TextField
+            value={firstname}
+            onChange={(event) => setFirstname(event.target.value)}
+            margin="normal"
+            fullWidth
+            label="First name"
+          />
+
+          <TextField
+            value={lastname}
+            onChange={(event) => setLastname(event.target.value)}
+            margin="normal"
+            fullWidth
+            label="Last name"
+          />
+
+          <TextField
+            value={email}
+            onChange={(event) => setEmail(event.target.value)}
+            margin="normal"
+            fullWidth
+            label="Email"
+          />
+
+          {/* {selectedImage && (
+            <div>
+              <img
+                alt="preview"
+                width={"250px"}
+                src={URL.createObjectURL(selectedImage)}
+              />
+              <br />
+              <button
+                onClick={() => {
+                  imageInputRef.current.value = null;
+                  setSelectedImage(null);
+                }}
+              >
+                Remove
+              </button>
+            </div>
+          )} */}
+
+          <input
+            ref={imageInputRef}
+            type="file"
+            name="avatar"
+            onChange={(event) => {
+              console.log(event.target.files[0]);
+              setSelectedImage(event.target.files[0]);
+            }}
+          />
+
+          <Button
+            type="submit"
+            fullWidth
+            variant="contained"
+            sx={{ mb: 3 }}
+            onClick={createUser}
+          >
+            Save changes
+          </Button>
+        </Box>
+      </Modal>
+
       <Title>User list</Title>
+
+      <Button
+        type="submit"
+        fullWidth
+        variant="contained"
+        sx={{ mb: 3 }}
+        onClick={showCreationForm}
+      >
+        Add new user
+      </Button>
 
       <TextField
         margin="normal"
