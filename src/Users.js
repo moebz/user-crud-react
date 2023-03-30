@@ -21,13 +21,22 @@ import Pagination from "@mui/material/Pagination";
 import Modal from "@mui/material/Modal";
 import api from "./api";
 
-function preventDefault(event) {
-  event.preventDefault();
+function getCurrentMilliseconds() {
+  const currentMilliseconds = Date.now();
+  return currentMilliseconds.toString();
+}
+
+function getRandomIntInclusive(min, max) {
+  min = Math.ceil(min);
+  max = Math.floor(max);
+  return Math.floor(Math.random() * (max - min + 1) + min); // The maximum is inclusive and the minimum is inclusive
 }
 
 const pageSize = 12;
 
 function Users() {
+  const currentMilliseconds = getCurrentMilliseconds();
+
   const [users, setUsers] = useState({
     data: [],
     status: "PENDING",
@@ -235,20 +244,6 @@ function Users() {
           {selectedUser && (
             <>
               <TextField
-                value={selectedUser.username}
-                margin="normal"
-                required
-                fullWidth
-                label="Username"
-                onChange={(event) =>
-                  setSelectedUser({
-                    ...selectedUser,
-                    username: event.target.value,
-                  })
-                }
-              />
-
-              <TextField
                 value={selectedUser.firstname}
                 margin="normal"
                 fullWidth
@@ -270,6 +265,21 @@ function Users() {
                   setSelectedUser({
                     ...selectedUser,
                     lastname: event.target.value,
+                  })
+                }
+              />
+
+              <TextField
+                value={selectedUser.username}
+                margin="normal"
+                required
+                fullWidth
+                label="Username"
+                autoComplete={currentMilliseconds}
+                onChange={(event) =>
+                  setSelectedUser({
+                    ...selectedUser,
+                    username: event.target.value,
                   })
                 }
               />
@@ -326,33 +336,6 @@ function Users() {
           </Typography>
 
           <TextField
-            value={username}
-            onChange={(event) => setUsername(event.target.value)}
-            margin="normal"
-            required
-            fullWidth
-            label="Username"
-          />
-
-          <TextField
-            value={password1}
-            onChange={(event) => setPassword1(event.target.value)}
-            margin="normal"
-            fullWidth
-            label="Password"
-            type="password"
-          />
-
-          <TextField
-            value={password2}
-            onChange={(event) => setPassword2(event.target.value)}
-            margin="normal"
-            fullWidth
-            label="Password again"
-            type="password"
-          />
-
-          <TextField
             value={firstname}
             onChange={(event) => setFirstname(event.target.value)}
             margin="normal"
@@ -374,6 +357,36 @@ function Users() {
             margin="normal"
             fullWidth
             label="Email"
+          />
+
+          <TextField
+            value={username}
+            autoComplete={currentMilliseconds}
+            onChange={(event) => setUsername(event.target.value)}
+            margin="normal"
+            required
+            fullWidth
+            label="Username"
+          />
+
+          <TextField
+            value={password1}
+            autoComplete={currentMilliseconds}
+            onChange={(event) => setPassword1(event.target.value)}
+            margin="normal"
+            fullWidth
+            label="New password"
+            type="password"
+          />
+
+          <TextField
+            value={password2}
+            onChange={(event) => setPassword2(event.target.value)}
+            margin="normal"
+            fullWidth
+            label="Password again"
+            type="password"
+            autoComplete={currentMilliseconds}
           />
 
           {/* {selectedImage && (
@@ -432,9 +445,9 @@ function Users() {
       <TextField
         margin="normal"
         fullWidth
-        id="filter"
         label="Filter by name, username or email"
         onChange={(event) => setFilter(event.target.value)}
+        autoComplete={currentMilliseconds}
       />
 
       <Button
