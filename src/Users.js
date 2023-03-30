@@ -19,6 +19,8 @@ import TableRow from "@mui/material/TableRow";
 import Title from "./Title";
 import Pagination from "@mui/material/Pagination";
 import Modal from "@mui/material/Modal";
+import { TableSortLabel } from "@mui/material";
+import { visuallyHidden } from "@mui/utils";
 import api from "./api";
 
 function getCurrentMilliseconds() {
@@ -32,7 +34,9 @@ function getRandomIntInclusive(min, max) {
   return Math.floor(Math.random() * (max - min + 1) + min); // The maximum is inclusive and the minimum is inclusive
 }
 
-const pageSize = 12;
+const DEFAULT_PAGE_SIZE = 12;
+const DEFAULT_ORDER = "asc";
+const DEFAULT_ORDER_BY = "username";
 
 function Users() {
   const currentMilliseconds = getCurrentMilliseconds();
@@ -62,6 +66,8 @@ function Users() {
   const [email, setEmail] = useState("");
   const [selectedImage, setSelectedImage] = useState(null);
   const imageInputRef = React.useRef();
+  const [order, setOrder] = React.useState(DEFAULT_ORDER);
+  const [orderBy, setOrderBy] = React.useState(DEFAULT_ORDER_BY);
 
   async function getUsersAndSetState(params) {
     const result = await api.get("/users", {
@@ -81,24 +87,30 @@ function Users() {
   useEffect(() => {
     getUsersAndSetState({
       pageNumber: 1,
-      pageSize,
+      pageSize: DEFAULT_PAGE_SIZE,
       filter,
+      orderBy,
+      orderDirection: order,
     });
   }, []);
 
   function handlePageChange(pageNumber) {
     getUsersAndSetState({
       pageNumber,
-      pageSize,
+      pageSize: DEFAULT_PAGE_SIZE,
       filter,
+      orderBy,
+      orderDirection: order,
     });
   }
 
   function handleApplyFilter() {
     getUsersAndSetState({
       pageNumber: 1,
-      pageSize,
+      pageSize: DEFAULT_PAGE_SIZE,
       filter,
+      orderBy,
+      orderDirection: order,
     });
   }
 
@@ -132,8 +144,10 @@ function Users() {
     const result = await api.delete(`/users/${selectedUser.id}`);
     await getUsersAndSetState({
       pageNumber: 1,
-      pageSize,
+      pageSize: DEFAULT_PAGE_SIZE,
       filter,
+      orderBy,
+      orderDirection: order,
     });
     setIsModalOpen(false);
   }
@@ -147,8 +161,10 @@ function Users() {
     });
     await getUsersAndSetState({
       pageNumber: 1,
-      pageSize,
+      pageSize: DEFAULT_PAGE_SIZE,
       filter,
+      orderBy,
+      orderDirection: order,
     });
     setIsEditModalOpen(false);
   }
@@ -168,11 +184,77 @@ function Users() {
 
     await getUsersAndSetState({
       pageNumber: 1,
-      pageSize,
+      pageSize: DEFAULT_PAGE_SIZE,
       filter,
+      orderBy,
+      orderDirection: order,
     });
 
     setIsCreationModalOpen(false);
+  }
+
+  // First name
+  // Last name
+  // Username
+  // Email
+
+  const headCells = [
+    {
+      id: "firstname",
+      numeric: false,
+      disablePadding: false,
+      label: "First name",
+      withSort: true,
+    },
+    {
+      id: "lastname",
+      numeric: false,
+      disablePadding: false,
+      label: "Last name",
+      withSort: true,
+    },
+    {
+      id: "username",
+      numeric: false,
+      disablePadding: false,
+      label: "Username",
+      withSort: true,
+    },
+    {
+      id: "email",
+      numeric: false,
+      disablePadding: false,
+      label: "Email",
+      withSort: true,
+    },
+    {
+      id: "actions",
+      numeric: false,
+      disablePadding: false,
+      label: "",
+      withSort: false,
+    },
+  ];
+
+  function handleRequestSort(event, newOrderBy) {
+    const isAsc = orderBy === newOrderBy && order === "asc";
+    const toggledOrder = isAsc ? "desc" : "asc";
+    setOrder(toggledOrder);
+    setOrderBy(newOrderBy);
+
+    getUsersAndSetState({
+      pageNumber: currentPage,
+      pageSize: DEFAULT_PAGE_SIZE,
+      filter,
+      orderBy: newOrderBy,
+      orderDirection: toggledOrder,
+    });
+  }
+
+  function createSortHandler(newOrderBy) {
+    return function (event) {
+      handleRequestSort(event, newOrderBy);
+    };
   }
 
   return (
@@ -461,7 +543,7 @@ function Users() {
       </Button>
 
       <Pagination
-        count={Math.ceil(total / pageSize)}
+        count={Math.ceil(total / DEFAULT_PAGE_SIZE)}
         page={currentPage}
         onChange={(event, page) => handlePageChange(page)}
       />
@@ -469,11 +551,33 @@ function Users() {
       <Table size="small">
         <TableHead>
           <TableRow>
-            <TableCell>First name</TableCell>
-            <TableCell>Last name</TableCell>
-            <TableCell>Username</TableCell>
-            <TableCell>Email</TableCell>
-            <TableCell></TableCell>
+            {headCells.map((headCell) => (
+              <TableCell
+                key={headCell.id}
+                align={headCell.numeric ? "right" : "left"}
+                padding={headCell.disablePadding ? "none" : "normal"}
+                sortDirection={orderBy === headCell.id ? order : false}
+              >
+                {headCell.withSort ? (
+                  <TableSortLabel
+                    active={orderBy === headCell.id}
+                    direction={orderBy === headCell.id ? order : "asc"}
+                    onClick={createSortHandler(headCell.id)}
+                  >
+                    {headCell.label}
+                    {orderBy === headCell.id ? (
+                      <Box component="span" sx={visuallyHidden}>
+                        {order === "desc"
+                          ? "sorted descending"
+                          : "sorted ascending"}
+                      </Box>
+                    ) : null}
+                  </TableSortLabel>
+                ) : (
+                  headCell.label
+                )}
+              </TableCell>
+            ))}
           </TableRow>
         </TableHead>
         <TableBody>
@@ -482,6 +586,7 @@ function Users() {
               <TableCell>{row.firstname}</TableCell>
               <TableCell>{row.lastname}</TableCell>
               <TableCell>{row.username}</TableCell>
+              <TableCell>{row.email}</TableCell>
               <TableCell>
                 <Button
                   type="submit"
