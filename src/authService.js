@@ -1,3 +1,5 @@
+import jwtDecode from "jwt-decode";
+
 import api from "./api";
 
 const login = async (username, passwd) => {
@@ -48,7 +50,12 @@ const getUser = () => {
 };
 
 const setUser = (user) => {
-  console.log(JSON.stringify(user));
+  console.log("setUser", JSON.stringify(user));
+
+  const decodedToken = jwtDecode(user.userToken);
+
+  console.log("decodedToken", decodedToken);
+  user.decodedToken = decodedToken;
   localStorage.setItem("user", JSON.stringify(user));
 };
 
