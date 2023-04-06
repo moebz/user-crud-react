@@ -32,12 +32,10 @@ function Login({ setCurrentUser }) {
 
     try {
       setLoading(true);
-      setCurrentUser(
-        await authService.login(
-          data.get("username"),
-          data.get("password"),
-          setCurrentUser
-        )
+      const loginResponse = await authService.login(
+        data.get("username"),
+        data.get("password"),
+        setCurrentUser
       );
       navigate("/home");
     } catch (error) {

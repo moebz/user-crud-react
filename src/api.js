@@ -1,7 +1,5 @@
 import axios from "axios";
 import httpStatus from "http-status";
-import TokenService from "./token.service";
-import { history } from "./history";
 import { authService } from "./authService";
 
 const axiosConfig = {
@@ -15,11 +13,6 @@ const instance = axios.create(axiosConfig);
 
 const responseSuccessInterceptor = (res) => {
   return res;
-};
-
-const logoutAndRedirectToLogin = () => {
-  authService.logout();
-  history.navigate("/login");
 };
 
 const responseErrorInterceptor = async (err) => {
@@ -42,7 +35,7 @@ const responseErrorInterceptor = async (err) => {
     // user to the login page.
 
     console.log("retryIsTrue.logout");
-    logoutAndRedirectToLogin();
+    authService.logoutAndRedirectToLogin();
     return;
   }
 
@@ -53,21 +46,21 @@ const responseErrorInterceptor = async (err) => {
 
   try {
     const refreshResult = await instance.post("/token/refresh", {
-      refreshToken: TokenService.getLocalRefreshToken(),
+      refreshToken: authService.getLocalRefreshToken(),
     });
 
     const { accessToken } = refreshResult.data;
-    TokenService.updateLocalAccessToken(accessToken);
+    authService.updateLocalAccessToken(accessToken);
 
     return instance(originalConfig);
   } catch (_error) {
     console.log("refreshFailed.logout");
-    logoutAndRedirectToLogin();
+    authService.logoutAndRedirectToLogin();
   }
 };
 
 const requestSuccessInterceptor = (config) => {
-  const token = TokenService.getLocalAccessToken();
+  const token = authService.getLocalAccessToken();
   if (token) {
     config.headers["user-token"] = token;
   }

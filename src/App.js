@@ -25,10 +25,6 @@ import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
-import AdbIcon from "@mui/icons-material/Adb";
-
-const pages = ["Products", "Pricing", "Blog"];
-const settings = ["Profile", "Account", "Dashboard"];
 
 function ResponsiveAppBar({ currentUser, logOut }) {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
@@ -53,7 +49,6 @@ function ResponsiveAppBar({ currentUser, logOut }) {
     <AppBar position="static">
       <Container maxWidth="xl">
         <Toolbar disableGutters>
-          <AdbIcon sx={{ display: { xs: "none", md: "flex" }, mr: 1 }} />
           <Typography
             variant="h6"
             noWrap
@@ -69,7 +64,7 @@ function ResponsiveAppBar({ currentUser, logOut }) {
               textDecoration: "none",
             }}
           >
-            LOGO
+            Users
           </Typography>
 
           <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
@@ -101,14 +96,12 @@ function ResponsiveAppBar({ currentUser, logOut }) {
                 display: { xs: "block", md: "none" },
               }}
             >
-              {pages.map((page) => (
-                <MenuItem key={page} onClick={handleCloseNavMenu}>
-                  <Typography textAlign="center">{page}</Typography>
-                </MenuItem>
-              ))}
+              <MenuItem onClick={handleCloseNavMenu}>
+                <Typography textAlign="center">List</Typography>
+              </MenuItem>
             </Menu>
           </Box>
-          <AdbIcon sx={{ display: { xs: "flex", md: "none" }, mr: 1 }} />
+
           <Typography
             variant="h5"
             noWrap
@@ -125,18 +118,16 @@ function ResponsiveAppBar({ currentUser, logOut }) {
               textDecoration: "none",
             }}
           >
-            LOGO
+            Users
           </Typography>
+
           <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
-            {pages.map((page) => (
-              <Button
-                key={page}
-                onClick={handleCloseNavMenu}
-                sx={{ my: 2, color: "white", display: "block" }}
-              >
-                {page}
-              </Button>
-            ))}
+            <Button
+              onClick={handleCloseNavMenu}
+              sx={{ my: 2, color: "white", display: "block" }}
+            >
+              List
+            </Button>
           </Box>
 
           <Box sx={{ flexGrow: 0 }}>
@@ -163,29 +154,36 @@ function ResponsiveAppBar({ currentUser, logOut }) {
             >
               {currentUser?.decodedToken && [
                 <MenuItem key="username" disabled={true}>
-                  <Typography textAlign="center">
+                  <Typography variant="body2" textAlign="center">
                     {currentUser.decodedToken.username}
                   </Typography>
                 </MenuItem>,
                 <MenuItem key="name" disabled={true}>
-                  <Typography textAlign="center">
+                  <Typography variant="body2" textAlign="center">
                     {`${currentUser.decodedToken.firstname} ${currentUser.decodedToken.lastname}`}
                   </Typography>
                 </MenuItem>,
                 <MenuItem key="email" disabled={true} divider={true}>
-                  <Typography textAlign="center">
+                  <Typography variant="body2" textAlign="center">
                     {currentUser.decodedToken.email}
                   </Typography>
                 </MenuItem>,
               ]}
-              {settings.map((setting) => (
-                <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                  <Typography textAlign="center">{setting}</Typography>
+
+              {currentUser?.decodedToken && (
+                <MenuItem key="logout" onClick={logOut}>
+                  <Typography textAlign="center">Log out</Typography>
                 </MenuItem>
-              ))}
-              <MenuItem key="logout" onClick={logOut}>
-                <Typography textAlign="center">Log out</Typography>
-              </MenuItem>
+              )}
+
+              {!currentUser?.decodedToken && (
+                <MenuItem
+                  key="logout"
+                  onClick={() => history.navigate("/login")}
+                >
+                  <Typography textAlign="center">Log in</Typography>
+                </MenuItem>
+              )}
             </Menu>
           </Box>
         </Toolbar>
@@ -211,9 +209,11 @@ function App() {
   }, []);
 
   const logOut = () => {
-    authService.logout();
     setCurrentUser(undefined);
+    authService.logoutAndRedirectToLogin();
   };
+
+  console.log("App.render.currentUser", currentUser);
 
   return (
     <>

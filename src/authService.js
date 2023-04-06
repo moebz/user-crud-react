@@ -2,7 +2,9 @@ import jwtDecode from "jwt-decode";
 
 import api from "./api";
 
-const login = async (username, passwd) => {
+import { history } from "./history";
+
+const login = async (username, passwd, setCurrentUser) => {
   const response = await api.post("/login", {
     username,
     passwd,
@@ -12,13 +14,20 @@ const login = async (username, passwd) => {
 
   if (response?.data?.data?.userToken) {
     console.log("login.setInLocalStorage");
-    setUser(response.data.data);
+
+    const userDataToSet = response.data.data;
+
+    // Store in localStorage
+
+    setUser(userDataToSet);
+
+    // Set in App state
+
+    setCurrentUser(userDataToSet);
   } else {
     console.log("login.notSettingInLocalStorage");
     throw new Error("Login didn't return necessary data");
   }
-
-  return response.data;
 };
 
 const logout = () => {
@@ -50,12 +59,15 @@ const getUser = () => {
 };
 
 const setUser = (user) => {
-  console.log("setUser", JSON.stringify(user));
+  console.log("setUser.originalUserData", JSON.stringify(user));
 
   const decodedToken = jwtDecode(user.userToken);
-
   console.log("decodedToken", decodedToken);
+  
   user.decodedToken = decodedToken;
+
+  console.log("setUser.modifiedUserData", JSON.stringify(user));
+
   localStorage.setItem("user", JSON.stringify(user));
 };
 
@@ -68,6 +80,11 @@ const isLoggedIn = () => {
   return Boolean(user);
 };
 
+const logoutAndRedirectToLogin = () => {
+  logout();
+  history.navigate("/login");
+};
+
 const authService = {
   login,
   logout,
@@ -78,6 +95,7 @@ const authService = {
   getUser,
   setUser,
   isLoggedIn,
+  logoutAndRedirectToLogin,
 };
 
 export { authService };
