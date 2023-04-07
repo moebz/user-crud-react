@@ -16,7 +16,9 @@ import { authService } from "./authService";
 import { useNavigate } from "react-router-dom";
 import { CircularProgress } from "@mui/material";
 
-function Login({ setCurrentUser }) {
+import api from "./api";
+
+function Login({ setCurrentUser, setCurrentUserData }) {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
 
@@ -32,11 +34,17 @@ function Login({ setCurrentUser }) {
 
     try {
       setLoading(true);
-      const loginResponse = await authService.login(
+      await authService.login(
         data.get("username"),
         data.get("password"),
         setCurrentUser
       );
+      const currentUser = authService.getCurrentUser();
+      const userData = await api.get(`/users/${currentUser.decodedToken.id}`);
+
+      console.log("userData", userData);
+
+      setCurrentUserData(userData.data.data[0]);
       navigate("/home");
     } catch (error) {
       const resMessage =

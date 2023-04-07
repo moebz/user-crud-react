@@ -14,7 +14,7 @@ import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 import PersonIcon from "@mui/icons-material/Person";
 
-function ResponsiveAppBar({ currentUser, logOut }) {
+function ResponsiveAppBar({ currentUser, currentUserData, logOut }) {
   const [anchorElNav, setAnchorElNav] = useState(null);
   const [anchorElUser, setAnchorElUser] = useState(null);
 
@@ -127,8 +127,11 @@ function ResponsiveAppBar({ currentUser, logOut }) {
             <Tooltip title="Open settings">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
                 <Avatar
-                  alt="Remy Sharp"
-                  src="/something.png"
+                  alt="Profile"
+                  src={
+                    currentUserData?.avatar_url &&
+                    `http://localhost:4000/${currentUserData.avatar_url}`
+                  }
                   children={<PersonIcon />}
                 />
               </IconButton>

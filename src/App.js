@@ -22,6 +22,7 @@ function App() {
   history.location = useLocation();
 
   const [currentUser, setCurrentUser] = useState(undefined);
+  const [currentUserData, setCurrentUserData] = useState(undefined);
 
   useEffect(() => {
     const user = authService.getCurrentUser();
@@ -40,12 +41,12 @@ function App() {
 
   return (
     <>
-      <ResponsiveAppBar currentUser={currentUser} logOut={logOut} />
+      <ResponsiveAppBar currentUser={currentUser} currentUserData={currentUserData} logOut={logOut} />
 
       <Routes>
         <Route
           path="/login"
-          element={<Login setCurrentUser={setCurrentUser} />}
+          element={<Login setCurrentUser={setCurrentUser} setCurrentUserData={setCurrentUserData} />}
         />
         <Route
           path="/home"
