@@ -19,17 +19,7 @@ import Snackbar from "@mui/material/Snackbar";
 import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
 import api from "./api";
-
-function getCurrentMilliseconds() {
-  const currentMilliseconds = Date.now();
-  return currentMilliseconds.toString();
-}
-
-function getRandomIntInclusive(min, max) {
-  min = Math.ceil(min);
-  max = Math.floor(max);
-  return Math.floor(Math.random() * (max - min + 1) + min); // The maximum is inclusive and the minimum is inclusive
-}
+import { getCurrentMilliseconds } from "./utils";
 
 const DEFAULT_PAGE_SIZE = 12;
 const DEFAULT_ORDER = "asc";
@@ -38,25 +28,23 @@ const DEFAULT_ORDER_BY = "username";
 function Users() {
   const currentMilliseconds = getCurrentMilliseconds();
 
+  const [isSnackbarOpen, setIsSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
+
   const [users, setUsers] = useState({
     data: [],
     status: "PENDING",
   });
-
   const [filter, setFilter] = useState("");
-
   const [currentPage, setCurrentPage] = useState(1);
-
   const [total, setTotal] = useState(0);
+  const [order, setOrder] = React.useState(DEFAULT_ORDER);
+  const [orderBy, setOrderBy] = React.useState(DEFAULT_ORDER_BY);
 
+  const [selectedUser, setSelectedUser] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isCreationModalOpen, setIsCreationModalOpen] = useState(false);
-
-  const [isSnackbarOpen, setIsSnackbarOpen] = useState(false);
-  const [snackbarMessage, setSnackbarMessage] = useState("");
-
-  const [selectedUser, setSelectedUser] = useState(null);
 
   const [username, setUsername] = useState("");
   const [password1, setPassword1] = useState("");
@@ -66,22 +54,27 @@ function Users() {
   const [email, setEmail] = useState("");
   const [selectedImage, setSelectedImage] = useState(null);
   const imageInputRef = React.useRef();
-  const [order, setOrder] = React.useState(DEFAULT_ORDER);
-  const [orderBy, setOrderBy] = React.useState(DEFAULT_ORDER_BY);
 
   async function getUsersAndSetState(params) {
-    const result = await api.get("/users", {
-      params,
-    });
-    console.log("getUsersAndSetState.result.data", result.data);
+    try {
+      const result = await api.get("/users", {
+        params,
+      });
+      console.log("getUsersAndSetState.result.data", result.data);
 
-    if (result.data.data.rows) {
-      setUsers({ data: result.data.data.rows, status: "DONE" });
-    } else {
-      setUsers({ data: [], status: "DONE" });
+      if (result.data.data.rows) {
+        setUsers({ data: result.data.data.rows, status: "DONE" });
+      } else {
+        setUsers({ data: [], status: "DONE" });
+      }
+
+      setCurrentPage(params.pageNumber);
+      setTotal(parseInt(result.data.data.total, 10));
+    } catch (error) {
+      console.error(error);
+      setSnackbarMessage("There was an error trying to get the user list");
+      setIsSnackbarOpen(true);
     }
-    setCurrentPage(params.pageNumber);
-    setTotal(parseInt(result.data.data.total, 10));
   }
 
   useEffect(() => {
