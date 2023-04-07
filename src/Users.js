@@ -1,14 +1,8 @@
 import React, { useState, useEffect } from "react";
-import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Checkbox from "@mui/material/Checkbox";
-import Link from "@mui/material/Link";
-import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
-import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import Table from "@mui/material/Table";
@@ -21,6 +15,9 @@ import Pagination from "@mui/material/Pagination";
 import Modal from "@mui/material/Modal";
 import { TableSortLabel } from "@mui/material";
 import { visuallyHidden } from "@mui/utils";
+import Snackbar from "@mui/material/Snackbar";
+import IconButton from "@mui/material/IconButton";
+import CloseIcon from "@mui/icons-material/Close";
 import api from "./api";
 
 function getCurrentMilliseconds() {
@@ -55,6 +52,9 @@ function Users() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isCreationModalOpen, setIsCreationModalOpen] = useState(false);
+
+  const [isSnackbarOpen, setIsSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
 
   const [selectedUser, setSelectedUser] = useState(null);
 
@@ -153,44 +153,63 @@ function Users() {
   }
 
   async function editUser() {
-    const result = await api.put(`/users/${selectedUser.id}`, {
-      firstname: selectedUser.firstname,
-      lastname: selectedUser.lastname,
-      email: selectedUser.email,
-      username: selectedUser.username,
-    });
-    await getUsersAndSetState({
-      pageNumber: 1,
-      pageSize: DEFAULT_PAGE_SIZE,
-      filter,
-      orderBy,
-      orderDirection: order,
-    });
-    setIsEditModalOpen(false);
+    try {
+      const result = await api.put(`/users/${selectedUser.id}`, {
+        firstname: selectedUser.firstname,
+        lastname: selectedUser.lastname,
+        email: selectedUser.email,
+        username: selectedUser.username,
+      });
+
+      await getUsersAndSetState({
+        pageNumber: 1,
+        pageSize: DEFAULT_PAGE_SIZE,
+        filter,
+        orderBy,
+        orderDirection: order,
+      });
+
+      setIsEditModalOpen(false);
+      setSnackbarMessage("User modified successfully");
+    } catch (error) {
+      console.error(error);
+      setSnackbarMessage("There was an error modifying the user");
+    }
+    setIsSnackbarOpen(true);
   }
 
   async function createUser() {
-    const formData = new FormData();
-    formData.append("avatar", selectedImage);
-    formData.append("firstname", firstname);
-    formData.append("lastname", lastname);
-    formData.append("email", email);
-    formData.append("passwd", password1);
-    formData.append("username", username);
+    try {
+      const formData = new FormData();
+      formData.append("avatar", selectedImage);
+      formData.append("firstname", firstname);
+      formData.append("lastname", lastname);
+      formData.append("email", email);
+      formData.append("passwd", password1);
+      formData.append("username", username);
 
-    const result = await api.post("/users/", formData, {
-      headers: { "Content-Type": "multipart/form-data" },
-    });
+      const result = await api.post("/users/", formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
 
-    await getUsersAndSetState({
-      pageNumber: 1,
-      pageSize: DEFAULT_PAGE_SIZE,
-      filter,
-      orderBy,
-      orderDirection: order,
-    });
+      console.log("createUser.result", result);
 
-    setIsCreationModalOpen(false);
+      await getUsersAndSetState({
+        pageNumber: 1,
+        pageSize: DEFAULT_PAGE_SIZE,
+        filter,
+        orderBy,
+        orderDirection: order,
+      });
+
+      setIsCreationModalOpen(false);
+
+      setSnackbarMessage("User created successfully");
+    } catch (error) {
+      console.error(error);
+      setSnackbarMessage("An error occurred while trying to create the user");
+    }
+    setIsSnackbarOpen(true);
   }
 
   // First name
@@ -236,7 +255,7 @@ function Users() {
     },
   ];
 
-  function handleRequestSort(event, newOrderBy) {
+  function handleSortRequest(event, newOrderBy) {
     const isAsc = orderBy === newOrderBy && order === "asc";
     const toggledOrder = isAsc ? "desc" : "asc";
     setOrder(toggledOrder);
@@ -253,13 +272,38 @@ function Users() {
 
   function createSortHandler(newOrderBy) {
     return function (event) {
-      handleRequestSort(event, newOrderBy);
+      handleSortRequest(event, newOrderBy);
     };
   }
+
+  function handleSnackbarClose() {
+    setIsSnackbarOpen(false);
+  }
+
+  const action = (
+    <React.Fragment>
+      <IconButton
+        size="small"
+        aria-label="close"
+        color="inherit"
+        onClick={handleSnackbarClose}
+      >
+        <CloseIcon fontSize="small" />
+      </IconButton>
+    </React.Fragment>
+  );
 
   return (
     <Container component="main" maxWidth="xs" sx={{ marginTop: 4 }}>
       <CssBaseline />
+
+      <Snackbar
+        open={isSnackbarOpen}
+        autoHideDuration={6000}
+        onClose={handleSnackbarClose}
+        message={snackbarMessage}
+        action={action}
+      />
 
       <Modal
         open={isModalOpen}
@@ -414,7 +458,7 @@ function Users() {
           }}
         >
           <Typography id="modal-modal-title" variant="h6" component="h2">
-            Edit user
+            New user
           </Typography>
 
           <TextField
@@ -507,7 +551,7 @@ function Users() {
             sx={{ mb: 3 }}
             onClick={createUser}
           >
-            Save changes
+            Add
           </Button>
         </Box>
       </Modal>
