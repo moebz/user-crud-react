@@ -59,9 +59,7 @@ function App() {
         <Route
           path="/users"
           element={
-            <RequireAuth>
               <Users />
-            </RequireAuth>
           }
         />
         <Route path="/" element={<Landing />} />

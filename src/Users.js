@@ -43,10 +43,14 @@ function Users() {
 
   const [selectedUser, setSelectedUser] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+
   const [isCreationModalOpen, setIsCreationModalOpen] = useState(false);
   const [isCreationFormAlertOpen, setIsCreationFormAlertOpen] = useState(false);
   const [creationFormAlertMessage, setCreationFormAlertMessage] = useState("");
+
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [isEditFormAlertOpen, setIsEditFormAlertOpen] = useState(false);
+  const [editFormAlertMessage, setEditFormAlertMessage] = useState("");
 
   const [username, setUsername] = useState("");
   const [password1, setPassword1] = useState("");
@@ -114,6 +118,7 @@ function Users() {
   }
 
   function handleEditModalClose() {
+    setIsEditFormAlertOpen(false);
     setIsEditModalOpen(false);
   }
 
@@ -170,6 +175,10 @@ function Users() {
     } catch (error) {
       console.error(error);
       setSnackbarMessage("There was an error modifying the user");
+      if (error?.response?.data?.message) {
+        setEditFormAlertMessage(error.response.data.message);
+        setIsEditFormAlertOpen(true);
+      }
     }
     setIsSnackbarOpen(true);
   }
@@ -425,6 +434,27 @@ function Users() {
               />
             </>
           )}
+
+          <Collapse in={isEditFormAlertOpen}>
+            <Alert
+              severity="warning"
+              action={
+                <IconButton
+                  aria-label="close"
+                  color="inherit"
+                  size="small"
+                  onClick={() => {
+                    setIsEditFormAlertOpen(false);
+                  }}
+                >
+                  <CloseIcon fontSize="inherit" />
+                </IconButton>
+              }
+              sx={{ mb: 2 }}
+            >
+              {editFormAlertMessage}
+            </Alert>
+          </Collapse>
 
           <Button
             type="submit"
