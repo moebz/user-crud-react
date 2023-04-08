@@ -13,7 +13,7 @@ import TableRow from "@mui/material/TableRow";
 import Title from "./Title";
 import Pagination from "@mui/material/Pagination";
 import Modal from "@mui/material/Modal";
-import { TableSortLabel } from "@mui/material";
+import { Alert, Collapse, TableSortLabel } from "@mui/material";
 import { visuallyHidden } from "@mui/utils";
 import Snackbar from "@mui/material/Snackbar";
 import IconButton from "@mui/material/IconButton";
@@ -45,6 +45,8 @@ function Users() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isCreationModalOpen, setIsCreationModalOpen] = useState(false);
+  const [isCreationFormAlertOpen, setIsCreationFormAlertOpen] = useState(false);
+  const [creationFormAlertMessage, setCreationFormAlertMessage] = useState("");
 
   const [username, setUsername] = useState("");
   const [password1, setPassword1] = useState("");
@@ -116,6 +118,7 @@ function Users() {
   }
 
   function handleCreationModalClose() {
+    setIsCreationFormAlertOpen(false);
     setIsCreationModalOpen(false);
   }
 
@@ -179,6 +182,7 @@ function Users() {
       formData.append("lastname", lastname);
       formData.append("email", email);
       formData.append("passwd", password1);
+      formData.append("passwd_confirmation", password2);
       formData.append("username", username);
 
       const result = await api.post("/users/", formData, {
@@ -201,6 +205,10 @@ function Users() {
     } catch (error) {
       console.error(error);
       setSnackbarMessage("An error occurred while trying to create the user");
+      if (error?.response?.data?.message) {
+        setCreationFormAlertMessage(error.response.data.message);
+        setIsCreationFormAlertOpen(true);
+      }
     }
     setIsSnackbarOpen(true);
   }
@@ -503,7 +511,7 @@ function Users() {
             onChange={(event) => setPassword2(event.target.value)}
             margin="normal"
             fullWidth
-            label="Password again"
+            label="Password confirmation"
             type="password"
             autoComplete={currentMilliseconds}
           />
@@ -536,6 +544,27 @@ function Users() {
               setSelectedImage(event.target.files[0]);
             }}
           />
+
+          <Collapse in={isCreationFormAlertOpen}>
+            <Alert
+              severity="warning"
+              action={
+                <IconButton
+                  aria-label="close"
+                  color="inherit"
+                  size="small"
+                  onClick={() => {
+                    setIsCreationFormAlertOpen(false);
+                  }}
+                >
+                  <CloseIcon fontSize="inherit" />
+                </IconButton>
+              }
+              sx={{ mb: 2 }}
+            >
+              {creationFormAlertMessage}
+            </Alert>
+          </Collapse>
 
           <Button
             type="submit"
