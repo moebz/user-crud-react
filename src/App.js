@@ -41,12 +41,21 @@ function App() {
 
   return (
     <>
-      <ResponsiveAppBar currentUser={currentUser} currentUserData={currentUserData} logOut={logOut} />
+      <ResponsiveAppBar
+        currentUser={currentUser}
+        currentUserData={currentUserData}
+        logOut={logOut}
+      />
 
       <Routes>
         <Route
           path="/login"
-          element={<Login setCurrentUser={setCurrentUser} setCurrentUserData={setCurrentUserData} />}
+          element={
+            <Login
+              setCurrentUser={setCurrentUser}
+              setCurrentUserData={setCurrentUserData}
+            />
+          }
         />
         <Route
           path="/home"
@@ -56,12 +65,7 @@ function App() {
             </RequireAuth>
           }
         />
-        <Route
-          path="/users"
-          element={
-              <Users />
-          }
-        />
+        <Route path="/users" element={<Users />} />
         <Route path="/" element={<Landing />} />
       </Routes>
     </>
