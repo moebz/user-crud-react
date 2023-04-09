@@ -59,7 +59,9 @@ function Users() {
   const [lastname, setLastname] = useState("");
   const [email, setEmail] = useState("");
   const [selectedImage, setSelectedImage] = useState(null);
+  const [selectedImageForEdition, setSelectedImageForEdition] = useState(null);
   const imageInputRef = React.useRef();
+  const editionImageInputRef = React.useRef();
 
   async function getUsersAndSetState(params) {
     try {
@@ -155,11 +157,16 @@ function Users() {
 
   async function editUser() {
     try {
-      const result = await api.put(`/users/${selectedUser.id}`, {
-        firstname: selectedUser.firstname,
-        lastname: selectedUser.lastname,
-        email: selectedUser.email,
-        username: selectedUser.username,
+      const formData = new FormData();
+
+      formData.append("avatar", selectedImageForEdition);
+      formData.append("firstname", selectedUser.firstname);
+      formData.append("lastname", selectedUser.lastname);
+      formData.append("email", selectedUser.email);
+      formData.append("username", selectedUser.username);
+
+      const result = await api.post(`/users/${selectedUser.id}/update`, formData, {
+        headers: { "Content-Type": "multipart/form-data" },
       });
 
       await getUsersAndSetState({
@@ -431,6 +438,16 @@ function Users() {
                     email: event.target.value,
                   })
                 }
+              />
+
+              <input
+                ref={editionImageInputRef}
+                type="file"
+                name="avatar"
+                onChange={(event) => {
+                  console.log(event.target.files[0]);
+                  setSelectedImageForEdition(event.target.files[0]);
+                }}
               />
             </>
           )}
