@@ -21,8 +21,8 @@ function App() {
   history.navigate = useNavigate();
   history.location = useLocation();
 
-  const [currentUser, setCurrentUser] = useState(undefined);
-  const [currentUserData, setCurrentUserData] = useState(undefined);
+  const [currentUser, setCurrentUser] = useState(null);
+  const [currentUserData, setCurrentUserData] = useState(null);
 
   useEffect(() => {
     const user = authService.getCurrentUser();
@@ -33,7 +33,8 @@ function App() {
   }, []);
 
   const logOut = () => {
-    setCurrentUser(undefined);
+    setCurrentUser(null);
+    setCurrentUserData(null);
     authService.logoutAndRedirectToLogin();
   };
 
