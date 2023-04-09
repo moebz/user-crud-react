@@ -18,6 +18,10 @@ const responseSuccessInterceptor = (res) => {
 const responseErrorInterceptor = async (err) => {
   const originalConfig = err.config;
 
+  if (!originalConfig) {
+    return Promise.reject(err);
+  }
+
   console.log("originalConfig", originalConfig);
 
   if (
@@ -62,7 +66,7 @@ const responseErrorInterceptor = async (err) => {
 const requestSuccessInterceptor = (config) => {
   const token = authService.getLocalAccessToken();
   if (token) {
-    config.headers["user-token"] = token;
+    config.headers["access-token"] = token;
   }
   return config;
 };

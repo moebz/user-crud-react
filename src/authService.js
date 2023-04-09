@@ -12,7 +12,7 @@ const login = async (username, passwd, setCurrentUser) => {
 
   console.log("login.response.data", response.data);
 
-  if (response?.data?.data?.userToken) {
+  if (response?.data?.data?.accessToken) {
     console.log("login.setInLocalStorage");
 
     const userDataToSet = response.data.data;
@@ -61,7 +61,7 @@ const getUser = () => {
 const setUser = (user) => {
   console.log("setUser.originalUserData", JSON.stringify(user));
 
-  const decodedToken = jwtDecode(user.userToken);
+  const decodedToken = jwtDecode(user.accessToken);
   console.log("decodedToken", decodedToken);
   
   user.decodedToken = decodedToken;
