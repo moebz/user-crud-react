@@ -57,7 +57,8 @@ const responseErrorInterceptor = async (err) => {
     authService.updateLocalAccessToken(accessToken);
 
     return instance(originalConfig);
-  } catch (_error) {
+  } catch (refreshAndRetryError) {
+    console.log("refreshFailed.error", refreshAndRetryError);
     console.log("refreshFailed.logout");
     authService.logoutAndRedirectToLogin();
   }

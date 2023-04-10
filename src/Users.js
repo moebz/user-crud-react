@@ -18,6 +18,10 @@ import { visuallyHidden } from "@mui/utils";
 import Snackbar from "@mui/material/Snackbar";
 import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
+import InputLabel from "@mui/material/InputLabel";
+import MenuItem from "@mui/material/MenuItem";
+import FormControl from "@mui/material/FormControl";
+import Select from "@mui/material/Select";
 import api from "./api";
 import { getCurrentMilliseconds } from "./utils";
 
@@ -58,6 +62,7 @@ function Users() {
   const [firstname, setFirstname] = useState("");
   const [lastname, setLastname] = useState("");
   const [email, setEmail] = useState("");
+  const [role, setRole] = useState("standard");
   const [selectedImage, setSelectedImage] = useState(null);
   const [selectedImageForEdition, setSelectedImageForEdition] = useState(null);
   const imageInputRef = React.useRef();
@@ -124,17 +129,13 @@ function Users() {
     setIsEditModalOpen(false);
   }
 
-  function handleCreationModalClose() {
-    setIsCreationFormAlertOpen(false);
-    setIsCreationModalOpen(false);
-  }
-
   function askForDeletionConfirmation(user) {
     setSelectedUser(user);
     setIsModalOpen(true);
   }
 
   function showEditionForm(user) {
+    console.log("showEditionForm.user", user);
     setSelectedUser(user);
     setIsEditModalOpen(true);
   }
@@ -164,10 +165,15 @@ function Users() {
       formData.append("lastname", selectedUser.lastname);
       formData.append("email", selectedUser.email);
       formData.append("username", selectedUser.username);
+      formData.append("role", selectedUser.role);
 
-      const result = await api.post(`/users/${selectedUser.id}/update`, formData, {
-        headers: { "Content-Type": "multipart/form-data" },
-      });
+      const result = await api.post(
+        `/users/${selectedUser.id}/update`,
+        formData,
+        {
+          headers: { "Content-Type": "multipart/form-data" },
+        }
+      );
 
       await getUsersAndSetState({
         pageNumber: 1,
@@ -190,6 +196,11 @@ function Users() {
     setIsSnackbarOpen(true);
   }
 
+  function cleanAndCloseCreationModal() {
+    setIsCreationFormAlertOpen(false);
+    setIsCreationModalOpen(false);
+  }
+
   async function createUser() {
     try {
       const formData = new FormData();
@@ -200,6 +211,7 @@ function Users() {
       formData.append("passwd", password1);
       formData.append("passwd_confirmation", password2);
       formData.append("username", username);
+      formData.append("role", role);
 
       const result = await api.post("/users/", formData, {
         headers: { "Content-Type": "multipart/form-data" },
@@ -215,7 +227,7 @@ function Users() {
         orderDirection: order,
       });
 
-      setIsCreationModalOpen(false);
+      cleanAndCloseCreationModal();
 
       setSnackbarMessage("User created successfully");
     } catch (error) {
@@ -295,6 +307,10 @@ function Users() {
 
   function handleSnackbarClose() {
     setIsSnackbarOpen(false);
+  }
+
+  function handleRoleChange(event) {
+    setRole(event.target.value);
   }
 
   const action = (
@@ -440,6 +456,25 @@ function Users() {
                 }
               />
 
+              <FormControl fullWidth margin="normal">
+                <InputLabel id="edition-role-select-label">Role</InputLabel>
+                <Select
+                  labelId="edition-role-select-label"
+                  id="edition-role-select"
+                  value={selectedUser.role}
+                  label="Role"
+                  onChange={(event) =>
+                    setSelectedUser({
+                      ...selectedUser,
+                      role: event.target.value,
+                    })
+                  }
+                >
+                  <MenuItem value={"standard"}>Standard</MenuItem>
+                  <MenuItem value={"admin"}>Administrator</MenuItem>
+                </Select>
+              </FormControl>
+
               <input
                 ref={editionImageInputRef}
                 type="file"
@@ -487,7 +522,7 @@ function Users() {
 
       <Modal
         open={isCreationModalOpen}
-        onClose={handleCreationModalClose}
+        onClose={cleanAndCloseCreationModal}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
@@ -563,6 +598,20 @@ function Users() {
             autoComplete={currentMilliseconds}
           />
 
+          <FormControl fullWidth margin="normal">
+            <InputLabel id="creation-role-select-label">Role</InputLabel>
+            <Select
+              labelId="creation-role-select-label"
+              id="creation-role-select"
+              value={role}
+              label="Role"
+              onChange={handleRoleChange}
+            >
+              <MenuItem value={"standard"}>Standard</MenuItem>
+              <MenuItem value={"admin"}>Administrator</MenuItem>
+            </Select>
+          </FormControl>
+
           {/* {selectedImage && (
             <div>
               <img
@@ -600,9 +649,7 @@ function Users() {
                   aria-label="close"
                   color="inherit"
                   size="small"
-                  onClick={() => {
-                    setIsCreationFormAlertOpen(false);
-                  }}
+                  onClick={cleanAndCloseCreationModal}
                 >
                   <CloseIcon fontSize="inherit" />
                 </IconButton>
