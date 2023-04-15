@@ -13,7 +13,12 @@ import TableRow from "@mui/material/TableRow";
 import Title from "./Title";
 import Pagination from "@mui/material/Pagination";
 import Modal from "@mui/material/Modal";
-import { Alert, Collapse, TableSortLabel } from "@mui/material";
+import {
+  Alert,
+  CircularProgress,
+  Collapse,
+  TableSortLabel,
+} from "@mui/material";
 import { visuallyHidden } from "@mui/utils";
 import Snackbar from "@mui/material/Snackbar";
 import IconButton from "@mui/material/IconButton";
@@ -23,7 +28,7 @@ import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import api from "./api";
-import { getCurrentMilliseconds } from "./utils";
+import { getCurrentMilliseconds, sleep } from "./utils";
 
 const DEFAULT_PAGE_SIZE = 12;
 const DEFAULT_ORDER = "asc";
@@ -37,7 +42,7 @@ function Users() {
 
   const [users, setUsers] = useState({
     data: [],
-    status: "PENDING",
+    status: "IDLE",
   });
   const [filter, setFilter] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
@@ -70,6 +75,10 @@ function Users() {
 
   async function getUsersAndSetState(params) {
     try {
+      setUsers({ ...users, status: "LOADING" });
+
+      await sleep(3000);
+
       const result = await api.get("/users", {
         params,
       });
@@ -85,6 +94,7 @@ function Users() {
       setTotal(parseInt(result.data.data.total, 10));
     } catch (error) {
       console.error(error);
+      setUsers({ data: [], status: "ERROR" });
       setSnackbarMessage("There was an error trying to get the user list");
       setIsSnackbarOpen(true);
     }
@@ -706,71 +716,78 @@ function Users() {
         count={Math.ceil(total / DEFAULT_PAGE_SIZE)}
         page={currentPage}
         onChange={(event, page) => handlePageChange(page)}
+        disabled={users.status !== "DONE" ? true : false}
       />
-
-      <Table size="small">
-        <TableHead>
-          <TableRow>
-            {headCells.map((headCell) => (
-              <TableCell
-                key={headCell.id}
-                align={headCell.numeric ? "right" : "left"}
-                padding={headCell.disablePadding ? "none" : "normal"}
-                sortDirection={orderBy === headCell.id ? order : false}
-              >
-                {headCell.withSort ? (
-                  <TableSortLabel
-                    active={orderBy === headCell.id}
-                    direction={orderBy === headCell.id ? order : "asc"}
-                    onClick={createSortHandler(headCell.id)}
+      
+      {users.status !== "DONE" ? (
+        <CircularProgress />
+      ) : (
+        <>
+          <Table size="small">
+            <TableHead>
+              <TableRow>
+                {headCells.map((headCell) => (
+                  <TableCell
+                    key={headCell.id}
+                    align={headCell.numeric ? "right" : "left"}
+                    padding={headCell.disablePadding ? "none" : "normal"}
+                    sortDirection={orderBy === headCell.id ? order : false}
                   >
-                    {headCell.label}
-                    {orderBy === headCell.id ? (
-                      <Box component="span" sx={visuallyHidden}>
-                        {order === "desc"
-                          ? "sorted descending"
-                          : "sorted ascending"}
-                      </Box>
-                    ) : null}
-                  </TableSortLabel>
-                ) : (
-                  headCell.label
-                )}
-              </TableCell>
-            ))}
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {users.data.map((row) => (
-            <TableRow key={row.id}>
-              <TableCell>{row.firstname}</TableCell>
-              <TableCell>{row.lastname}</TableCell>
-              <TableCell>{row.username}</TableCell>
-              <TableCell>{row.email}</TableCell>
-              <TableCell>
-                <Button
-                  type="submit"
-                  fullWidth
-                  variant="contained"
-                  sx={{ mb: 3 }}
-                  onClick={() => askForDeletionConfirmation(row)}
-                >
-                  Delete
-                </Button>
-                <Button
-                  type="submit"
-                  fullWidth
-                  variant="contained"
-                  sx={{ mb: 3 }}
-                  onClick={() => showEditionForm(row)}
-                >
-                  Edit
-                </Button>
-              </TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
+                    {headCell.withSort ? (
+                      <TableSortLabel
+                        active={orderBy === headCell.id}
+                        direction={orderBy === headCell.id ? order : "asc"}
+                        onClick={createSortHandler(headCell.id)}
+                      >
+                        {headCell.label}
+                        {orderBy === headCell.id ? (
+                          <Box component="span" sx={visuallyHidden}>
+                            {order === "desc"
+                              ? "sorted descending"
+                              : "sorted ascending"}
+                          </Box>
+                        ) : null}
+                      </TableSortLabel>
+                    ) : (
+                      headCell.label
+                    )}
+                  </TableCell>
+                ))}
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {users.data.map((row) => (
+                <TableRow key={row.id}>
+                  <TableCell>{row.firstname}</TableCell>
+                  <TableCell>{row.lastname}</TableCell>
+                  <TableCell>{row.username}</TableCell>
+                  <TableCell>{row.email}</TableCell>
+                  <TableCell>
+                    <Button
+                      type="submit"
+                      fullWidth
+                      variant="contained"
+                      sx={{ mb: 3 }}
+                      onClick={() => askForDeletionConfirmation(row)}
+                    >
+                      Delete
+                    </Button>
+                    <Button
+                      type="submit"
+                      fullWidth
+                      variant="contained"
+                      sx={{ mb: 3 }}
+                      onClick={() => showEditionForm(row)}
+                    >
+                      Edit
+                    </Button>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </>
+      )}
     </Container>
   );
 }
