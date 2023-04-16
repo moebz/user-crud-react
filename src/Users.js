@@ -59,6 +59,7 @@ function Users() {
   const [isCreationFormAlertOpen, setIsCreationFormAlertOpen] = useState(false);
   const [creationFormAlertMessage, setCreationFormAlertMessage] = useState("");
 
+  const [isUserEditLoading, setIsUserEditLoading] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isEditFormAlertOpen, setIsEditFormAlertOpen] = useState(false);
   const [editFormAlertMessage, setEditFormAlertMessage] = useState("");
@@ -170,6 +171,8 @@ function Users() {
 
   async function editUser() {
     try {
+      setIsUserEditLoading(true);
+
       const formData = new FormData();
 
       formData.append("avatar", selectedImageForEdition);
@@ -204,8 +207,10 @@ function Users() {
         setEditFormAlertMessage(error.response.data.message);
         setIsEditFormAlertOpen(true);
       }
+    } finally {
+      setIsUserEditLoading(false);
+      setIsSnackbarOpen(true);
     }
-    setIsSnackbarOpen(true);
   }
 
   function cleanAndCloseCreationModal() {
@@ -526,15 +531,30 @@ function Users() {
             </Alert>
           </Collapse>
 
-          <Button
-            type="submit"
-            fullWidth
-            variant="contained"
-            sx={{ mb: 3 }}
-            onClick={editUser}
-          >
-            Save changes
-          </Button>
+          <Box sx={{ position: "relative", mb: 3 }}>
+            <Button
+              type="submit"
+              fullWidth
+              variant="contained"
+              onClick={editUser}
+              disabled={isUserEditLoading}
+            >
+              Save changes
+            </Button>
+            {isUserEditLoading && (
+              <CircularProgress
+                size={24}
+                sx={{
+                  color: green[500],
+                  position: "absolute",
+                  top: "50%",
+                  left: "50%",
+                  marginTop: "-12px",
+                  marginLeft: "-12px",
+                }}
+              />
+            )}
+          </Box>
         </Box>
       </Modal>
 
