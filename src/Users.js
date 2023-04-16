@@ -64,6 +64,10 @@ function Users() {
   const [isEditFormAlertOpen, setIsEditFormAlertOpen] = useState(false);
   const [editFormAlertMessage, setEditFormAlertMessage] = useState("");
 
+  const [isUserDeletionLoading, setIsUserDeletionLoading] = useState(false);
+  const [isDeletionFormAlertOpen, setIsDeletionFormAlertOpen] = useState(false);
+  const [deletionFormAlertMessage, setDeletionFormAlertMessage] = useState("");
+
   const [username, setUsername] = useState("");
   const [password1, setPassword1] = useState("");
   const [password2, setPassword2] = useState("");
@@ -158,15 +162,37 @@ function Users() {
   }
 
   async function deleteUser() {
-    const result = await api.delete(`/users/${selectedUser.id}`);
-    await getUsersAndSetState({
-      pageNumber: 1,
-      pageSize: DEFAULT_PAGE_SIZE,
-      filter,
-      orderBy,
-      orderDirection: order,
-    });
-    setIsModalOpen(false);
+    try {
+      setIsUserDeletionLoading(true);
+
+      await sleep(3000);
+
+      const result = await api.delete(`/users/${selectedUser.id}`);
+
+      await getUsersAndSetState({
+        pageNumber: 1,
+        pageSize: DEFAULT_PAGE_SIZE,
+        filter,
+        orderBy,
+        orderDirection: order,
+      });
+
+      setIsModalOpen(false);
+
+      setSnackbarMessage("User deleted successfully");
+    } catch (error) {
+      console.error(error);
+
+      setSnackbarMessage("There was an error deleting the user");
+
+      if (error?.response?.data?.message) {
+        setDeletionFormAlertMessage(error.response.data.message);
+        setIsDeletionFormAlertOpen(true);
+      }
+    } finally {
+      setIsUserDeletionLoading(false);
+      setIsSnackbarOpen(true);
+    }
   }
 
   async function editUser() {
@@ -387,15 +413,52 @@ function Users() {
           <Typography id="modal-modal-description" sx={{ mt: 2 }}>
             Are you sure you want to delete this user?
           </Typography>
-          <Button
-            type="submit"
-            fullWidth
-            variant="contained"
-            sx={{ mb: 3 }}
-            onClick={deleteUser}
-          >
-            Yes, delete it
-          </Button>
+
+          <Collapse in={isDeletionFormAlertOpen}>
+            <Alert
+              severity="warning"
+              action={
+                <IconButton
+                  aria-label="close"
+                  color="inherit"
+                  size="small"
+                  onClick={() => {
+                    setIsDeletionFormAlertOpen(false);
+                  }}
+                >
+                  <CloseIcon fontSize="inherit" />
+                </IconButton>
+              }
+              sx={{ mb: 2 }}
+            >
+              {deletionFormAlertMessage}
+            </Alert>
+          </Collapse>
+
+          <Box sx={{ position: "relative", mb: 3 }}>
+            <Button
+              type="submit"
+              fullWidth
+              variant="contained"
+              onClick={deleteUser}
+              disabled={isUserDeletionLoading}
+            >
+              Delete
+            </Button>
+            {isUserDeletionLoading && (
+              <CircularProgress
+                size={24}
+                sx={{
+                  color: green[500],
+                  position: "absolute",
+                  top: "50%",
+                  left: "50%",
+                  marginTop: "-12px",
+                  marginLeft: "-12px",
+                }}
+              />
+            )}
+          </Box>
         </Box>
       </Modal>
 
