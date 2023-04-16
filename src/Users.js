@@ -29,6 +29,7 @@ import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import api from "./api";
 import { getCurrentMilliseconds, sleep } from "./utils";
+import { green } from "@mui/material/colors";
 
 const DEFAULT_PAGE_SIZE = 12;
 const DEFAULT_ORDER = "asc";
@@ -53,6 +54,7 @@ function Users() {
   const [selectedUser, setSelectedUser] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
+  const [isUserCreationLoading, setIsUserCreationLoading] = useState(false);
   const [isCreationModalOpen, setIsCreationModalOpen] = useState(false);
   const [isCreationFormAlertOpen, setIsCreationFormAlertOpen] = useState(false);
   const [creationFormAlertMessage, setCreationFormAlertMessage] = useState("");
@@ -75,7 +77,7 @@ function Users() {
 
   async function getUsersAndSetState(params) {
     try {
-      setUsers({ ...users, status: "LOADING" });
+      setUsers((users) => ({ ...users, status: "LOADING" }));
 
       await sleep(3000);
 
@@ -213,6 +215,8 @@ function Users() {
 
   async function createUser() {
     try {
+      setIsUserCreationLoading(true);
+
       const formData = new FormData();
       formData.append("avatar", selectedImage);
       formData.append("firstname", firstname);
@@ -247,8 +251,10 @@ function Users() {
         setCreationFormAlertMessage(error.response.data.message);
         setIsCreationFormAlertOpen(true);
       }
+    } finally {
+      setIsUserCreationLoading(false);
+      setIsSnackbarOpen(true);
     }
-    setIsSnackbarOpen(true);
   }
 
   // First name
@@ -335,6 +341,8 @@ function Users() {
       </IconButton>
     </React.Fragment>
   );
+
+  const totalNumberOfPages = Math.ceil(total / DEFAULT_PAGE_SIZE);
 
   return (
     <Container component="main" maxWidth="xs" sx={{ marginTop: 4 }}>
@@ -670,15 +678,30 @@ function Users() {
             </Alert>
           </Collapse>
 
-          <Button
-            type="submit"
-            fullWidth
-            variant="contained"
-            sx={{ mb: 3 }}
-            onClick={createUser}
-          >
-            Add
-          </Button>
+          <Box sx={{ position: "relative", mb: 3 }}>
+            <Button
+              type="submit"
+              fullWidth
+              variant="contained"
+              onClick={createUser}
+              disabled={isUserCreationLoading}
+            >
+              Add
+            </Button>
+            {isUserCreationLoading && (
+              <CircularProgress
+                size={24}
+                sx={{
+                  color: green[500],
+                  position: "absolute",
+                  top: "50%",
+                  left: "50%",
+                  marginTop: "-12px",
+                  marginLeft: "-12px",
+                }}
+              />
+            )}
+          </Box>
         </Box>
       </Modal>
 
@@ -712,16 +735,26 @@ function Users() {
         Apply filter
       </Button>
 
-      <Pagination
-        count={Math.ceil(total / DEFAULT_PAGE_SIZE)}
-        page={currentPage}
-        onChange={(event, page) => handlePageChange(page)}
-        disabled={users.status !== "DONE" ? true : false}
-      />
-      
-      {users.status !== "DONE" ? (
+      {users.status !== "ERROR" && totalNumberOfPages > 0 && (
+        <Pagination
+          count={totalNumberOfPages}
+          page={currentPage}
+          onChange={(event, page) => handlePageChange(page)}
+          disabled={users.status !== "DONE" ? true : false}
+        />
+      )}
+
+      {users.status !== "DONE" && users.status !== "ERROR" && (
         <CircularProgress />
-      ) : (
+      )}
+
+      {users.status === "ERROR" && (
+        <Alert severity="error">
+          There was an error trying to get the user list
+        </Alert>
+      )}
+
+      {users.status === "DONE" && (
         <>
           <Table size="small">
             <TableHead>
