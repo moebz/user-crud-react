@@ -36,17 +36,21 @@ function Login({ setCurrentUser, setCurrentUserData }) {
 
     try {
       setLoading(true);
+
       await authService.login(
         data.get("username"),
         data.get("password"),
         setCurrentUser
       );
+
       const currentUser = authService.getCurrentUser();
+
       const userData = await api.get(`/users/${currentUser.decodedToken.id}`);
 
       console.log("userData", userData);
 
       setCurrentUserData(userData.data.data[0]);
+
       navigate("/home");
     } catch (error) {
       const resMessage =

@@ -14,6 +14,7 @@ import { history } from "./history";
 import { RequireAuth } from "./RequireAuth";
 import { Users } from "./Users";
 import { ResponsiveAppBar } from "./ResponsiveAppBar";
+import api from "./api";
 
 function App() {
   // Init custom history object to allow navigation from
@@ -24,11 +25,21 @@ function App() {
   const [currentUser, setCurrentUser] = useState(null);
   const [currentUserData, setCurrentUserData] = useState(null);
 
+  const requestUserDataAndSaveItInState = async () => {
+    const userData = await api.get(`/users/${currentUser.decodedToken.id}`);
+    console.log("userData", userData);
+    setCurrentUserData(userData.data.data[0]);
+  };
+
   useEffect(() => {
     const user = authService.getCurrentUser();
     console.log("App.useEffect.user", user);
     if (user) {
       setCurrentUser(user);
+
+      if (!currentUserData) {
+        requestUserDataAndSaveItInState();
+      }
     }
   }, []);
 
@@ -55,6 +66,7 @@ function App() {
             <Login
               setCurrentUser={setCurrentUser}
               setCurrentUserData={setCurrentUserData}
+              requestUserDataAndSaveItInState={requestUserDataAndSaveItInState}
             />
           }
         />

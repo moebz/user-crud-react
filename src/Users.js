@@ -84,7 +84,7 @@ function Users() {
     try {
       setUsers((users) => ({ ...users, status: "LOADING" }));
 
-      await sleep(3000);
+      //      await sleep(3000);
 
       const result = await api.get("/users", {
         params,
@@ -165,7 +165,7 @@ function Users() {
     try {
       setIsUserDeletionLoading(true);
 
-      await sleep(3000);
+      // await sleep(3000);
 
       const result = await api.delete(`/users/${selectedUser.id}`);
 
