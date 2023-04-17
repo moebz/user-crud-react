@@ -25,8 +25,8 @@ function App() {
   const [currentUser, setCurrentUser] = useState(null);
   const [currentUserData, setCurrentUserData] = useState(null);
 
-  const requestUserDataAndSaveItInState = async () => {
-    const userData = await api.get(`/users/${currentUser.decodedToken.id}`);
+  const requestUserDataAndSaveItInState = async (user) => {
+    const userData = await api.get(`/users/${user.decodedToken.id}`);
     console.log("userData", userData);
     setCurrentUserData(userData.data.data[0]);
   };
@@ -38,7 +38,7 @@ function App() {
       setCurrentUser(user);
 
       if (!currentUserData) {
-        requestUserDataAndSaveItInState();
+        requestUserDataAndSaveItInState(user);
       }
     }
   }, []);

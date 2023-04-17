@@ -837,7 +837,11 @@ function Users() {
         </Alert>
       )}
 
-      {users.status === "DONE" && (
+      {users.status === "DONE" && !users?.data?.length && (
+        <Alert severity="info">No users to show</Alert>
+      )}
+
+      {users.status === "DONE" && !!users?.data?.length && (
         <>
           <Table size="small">
             <TableHead>
