@@ -137,6 +137,17 @@ function Users() {
     });
   }
 
+  function clearFilter() {
+    setFilter("");
+    getUsersAndSetState({
+      pageNumber: 1,
+      pageSize: DEFAULT_PAGE_SIZE,
+      filter: "",
+      orderBy,
+      orderDirection: order,
+    });
+  }
+
   function handleModalClose() {
     setIsModalOpen(false);
   }
@@ -806,16 +817,27 @@ function Users() {
         label="Filter by name, username or email"
         onChange={(event) => setFilter(event.target.value)}
         autoComplete={currentMilliseconds}
+        value={filter}
       />
 
       <Button
         type="submit"
         fullWidth
         variant="contained"
-        sx={{ mb: 3 }}
+        sx={{ mb: 1 }}
         onClick={handleApplyFilter}
       >
         Apply filter
+      </Button>
+
+      <Button
+        type="submit"
+        fullWidth
+        variant="contained"
+        sx={{ mb: 3 }}
+        onClick={clearFilter}
+      >
+        Clear filter
       </Button>
 
       {users.status !== "ERROR" && totalNumberOfPages > 0 && (
