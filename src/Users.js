@@ -30,6 +30,7 @@ import Select from "@mui/material/Select";
 import api from "./api";
 import { getCurrentMilliseconds, sleep } from "./utils";
 import { green } from "@mui/material/colors";
+import { ButtonWithLoader } from "./general/ButtonWithLoader";
 
 const DEFAULT_PAGE_SIZE = 12;
 const DEFAULT_ORDER = "asc";
@@ -176,7 +177,7 @@ function Users() {
     try {
       setIsUserDeletionLoading(true);
 
-      // await sleep(3000);
+      await sleep(3000);
 
       const result = await api.delete(`/users/${selectedUser.id}`);
 
@@ -446,30 +447,11 @@ function Users() {
             </Alert>
           </Collapse>
 
-          <Box sx={{ position: "relative", mb: 3 }}>
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              onClick={deleteUser}
-              disabled={isUserDeletionLoading}
-            >
-              Delete
-            </Button>
-            {isUserDeletionLoading && (
-              <CircularProgress
-                size={24}
-                sx={{
-                  color: green[500],
-                  position: "absolute",
-                  top: "50%",
-                  left: "50%",
-                  marginTop: "-12px",
-                  marginLeft: "-12px",
-                }}
-              />
-            )}
-          </Box>
+          <ButtonWithLoader
+            onButtonClick={deleteUser}
+            isLoading={isUserDeletionLoading}
+            buttonText="Delete"
+          />
         </Box>
       </Modal>
 
