@@ -31,6 +31,7 @@ import api from "./api";
 import { getCurrentMilliseconds, sleep } from "./utils";
 import { green } from "@mui/material/colors";
 import { ButtonWithLoader } from "./general/ButtonWithLoader";
+import { FileInput } from "./general/FileInput";
 
 const DEFAULT_PAGE_SIZE = 12;
 const DEFAULT_ORDER = "asc";
@@ -555,29 +556,11 @@ function Users() {
               </FormControl>
 
               <Box sx={{ mb: 2 }}>
-                <input
-                  ref={editionImageInputRef}
-                  type="file"
-                  accept="image/*"
-                  name="avatar"
-                  style={{ display: "none" }}
-                  onChange={(event) => {
-                    console.log(event.target.files[0]);
-                    setSelectedImageForEdition(event.target.files[0]);
-                  }}
+                <FileInput
+                  imageInputRef={editionImageInputRef}
+                  selectedImage={selectedImageForEdition}
+                  setSelectedImage={setSelectedImageForEdition}
                 />
-
-                <Button
-                  onClick={() => editionImageInputRef?.current?.click()}
-                  variant="contained"
-                >
-                  Upload
-                </Button>
-                <span style={{ marginLeft: 10 }}>
-                  {selectedImageForEdition
-                    ? `Selected file: ${selectedImageForEdition.name}`
-                    : "No file selected"}
-                </span>
               </Box>
             </>
           )}
@@ -722,33 +705,10 @@ function Users() {
             </Select>
           </FormControl>
 
-          {/* {selectedImage && (
-            <div>
-              <img
-                alt="preview"
-                width={"250px"}
-                src={URL.createObjectURL(selectedImage)}
-              />
-              <br />
-              <button
-                onClick={() => {
-                  imageInputRef.current.value = null;
-                  setSelectedImage(null);
-                }}
-              >
-                Remove
-              </button>
-            </div>
-          )} */}
-
-          <input
-            ref={imageInputRef}
-            type="file"
-            name="avatar"
-            onChange={(event) => {
-              console.log(event.target.files[0]);
-              setSelectedImage(event.target.files[0]);
-            }}
+          <FileInput
+            imageInputRef={imageInputRef}
+            selectedImage={selectedImage}
+            setSelectedImage={setSelectedImage}
           />
 
           <Collapse in={isCreationFormAlertOpen}>
