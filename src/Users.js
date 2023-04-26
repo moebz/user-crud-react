@@ -554,15 +554,31 @@ function Users() {
                 </Select>
               </FormControl>
 
-              <input
-                ref={editionImageInputRef}
-                type="file"
-                name="avatar"
-                onChange={(event) => {
-                  console.log(event.target.files[0]);
-                  setSelectedImageForEdition(event.target.files[0]);
-                }}
-              />
+              <Box sx={{ mb: 2 }}>
+                <input
+                  ref={editionImageInputRef}
+                  type="file"
+                  accept="image/*"
+                  name="avatar"
+                  style={{ display: "none" }}
+                  onChange={(event) => {
+                    console.log(event.target.files[0]);
+                    setSelectedImageForEdition(event.target.files[0]);
+                  }}
+                />
+
+                <Button
+                  onClick={() => editionImageInputRef?.current?.click()}
+                  variant="contained"
+                >
+                  Upload
+                </Button>
+                <span style={{ marginLeft: 10 }}>
+                  {selectedImageForEdition
+                    ? `Selected file: ${selectedImageForEdition.name}`
+                    : "No file selected"}
+                </span>
+              </Box>
             </>
           )}
 
