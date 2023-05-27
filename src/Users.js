@@ -2,36 +2,17 @@ import React, { useState, useEffect } from "react";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
-import Box from "@mui/material/Box";
-import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
-import Table from "@mui/material/Table";
-import TableBody from "@mui/material/TableBody";
-import TableCell from "@mui/material/TableCell";
-import TableHead from "@mui/material/TableHead";
-import TableRow from "@mui/material/TableRow";
 import Title from "./Title";
-import Pagination from "@mui/material/Pagination";
-import Modal from "@mui/material/Modal";
-import {
-  Alert,
-  CircularProgress,
-  Collapse,
-  TableSortLabel,
-} from "@mui/material";
-import { visuallyHidden } from "@mui/utils";
 import Snackbar from "@mui/material/Snackbar";
 import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
-import InputLabel from "@mui/material/InputLabel";
-import MenuItem from "@mui/material/MenuItem";
-import FormControl from "@mui/material/FormControl";
-import Select from "@mui/material/Select";
 import api from "./api";
 import { getCurrentMilliseconds, sleep } from "./utils";
-import { green } from "@mui/material/colors";
-import { ButtonWithLoader } from "./general/ButtonWithLoader";
-import { FileInput } from "./general/FileInput";
+import { UsersTable } from "./UsersTable";
+import { DeletionModal } from "./DeletionModal";
+import { CreationModal } from "./CreationModal";
+import { EditionModal } from "./EditionModal";
 
 const DEFAULT_PAGE_SIZE = 12;
 const DEFAULT_ORDER = "asc";
@@ -221,7 +202,7 @@ function Users() {
       formData.append("username", selectedUser.username);
       formData.append("role", selectedUser.role);
 
-      const result = await api.post(
+      await api.post(
         `/users/${selectedUser.id}/update`,
         formData,
         {
@@ -301,49 +282,6 @@ function Users() {
     }
   }
 
-  // First name
-  // Last name
-  // Username
-  // Email
-
-  const headCells = [
-    {
-      id: "firstname",
-      numeric: false,
-      disablePadding: false,
-      label: "First name",
-      withSort: true,
-    },
-    {
-      id: "lastname",
-      numeric: false,
-      disablePadding: false,
-      label: "Last name",
-      withSort: true,
-    },
-    {
-      id: "username",
-      numeric: false,
-      disablePadding: false,
-      label: "Username",
-      withSort: true,
-    },
-    {
-      id: "email",
-      numeric: false,
-      disablePadding: false,
-      label: "Email",
-      withSort: true,
-    },
-    {
-      id: "actions",
-      numeric: false,
-      disablePadding: false,
-      label: "",
-      withSort: false,
-    },
-  ];
-
   function handleSortRequest(event, newOrderBy) {
     const isAsc = orderBy === newOrderBy && order === "asc";
     const toggledOrder = isAsc ? "desc" : "asc";
@@ -400,362 +338,58 @@ function Users() {
         action={action}
       />
 
-      <Modal
-        open={isModalOpen}
-        onClose={handleModalClose}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-      >
-        <Box
-          sx={{
-            position: "absolute",
-            top: "50%",
-            left: "50%",
-            transform: "translate(-50%, -50%)",
-            width: 400,
-            bgcolor: "background.paper",
-            border: "2px solid #000",
-            boxShadow: 24,
-            p: 4,
-            outline: 0,
-          }}
-        >
-          <Typography id="modal-modal-title" variant="h6" component="h2">
-            Delete user
-          </Typography>
-          <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-            Are you sure you want to delete this user?
-          </Typography>
+      <DeletionModal
+        isModalOpen={isModalOpen}
+        handleModalClose={handleModalClose}
+        isDeletionFormAlertOpen={isDeletionFormAlertOpen}
+        setIsDeletionFormAlertOpen={setIsDeletionFormAlertOpen}
+        deletionFormAlertMessage={deletionFormAlertMessage}
+        deleteUser={deleteUser}
+        isUserDeletionLoading={isUserDeletionLoading}
+      />
 
-          <Collapse in={isDeletionFormAlertOpen}>
-            <Alert
-              severity="warning"
-              action={
-                <IconButton
-                  aria-label="close"
-                  color="inherit"
-                  size="small"
-                  onClick={() => {
-                    setIsDeletionFormAlertOpen(false);
-                  }}
-                >
-                  <CloseIcon fontSize="inherit" />
-                </IconButton>
-              }
-              sx={{ mb: 2 }}
-            >
-              {deletionFormAlertMessage}
-            </Alert>
-          </Collapse>
+      <EditionModal
+        currentMilliseconds={currentMilliseconds}
+        isEditModalOpen={isEditModalOpen}
+        handleEditModalClose={handleEditModalClose}
+        selectedUser={selectedUser}
+        setSelectedUser={setSelectedUser}
+        editionImageInputRef={editionImageInputRef}
+        selectedImageForEdition={selectedImageForEdition}
+        setSelectedImageForEdition={setSelectedImageForEdition}
+        isEditFormAlertOpen={isEditFormAlertOpen}
+        setIsEditFormAlertOpen={setIsEditFormAlertOpen}
+        editFormAlertMessage={editFormAlertMessage}
+        editUser={editUser}
+        isUserEditLoading={isUserEditLoading}
+      />
 
-          <ButtonWithLoader
-            onButtonClick={deleteUser}
-            isLoading={isUserDeletionLoading}
-            buttonText="Delete"
-          />
-        </Box>
-      </Modal>
-
-      <Modal
-        open={isEditModalOpen}
-        onClose={handleEditModalClose}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-      >
-        <Box
-          sx={{
-            position: "absolute",
-            top: "50%",
-            left: "50%",
-            transform: "translate(-50%, -50%)",
-            width: 400,
-            bgcolor: "background.paper",
-            border: "2px solid #000",
-            boxShadow: 24,
-            p: 4,
-            outline: 0,
-          }}
-        >
-          <Typography id="modal-modal-title" variant="h6" component="h2">
-            Edit user
-          </Typography>
-
-          {selectedUser && (
-            <>
-              <TextField
-                value={selectedUser.firstname}
-                margin="normal"
-                fullWidth
-                label="First name"
-                onChange={(event) =>
-                  setSelectedUser({
-                    ...selectedUser,
-                    firstname: event.target.value,
-                  })
-                }
-              />
-
-              <TextField
-                value={selectedUser.lastname}
-                margin="normal"
-                fullWidth
-                label="Last name"
-                onChange={(event) =>
-                  setSelectedUser({
-                    ...selectedUser,
-                    lastname: event.target.value,
-                  })
-                }
-              />
-
-              <TextField
-                value={selectedUser.username}
-                margin="normal"
-                required
-                fullWidth
-                label="Username"
-                autoComplete={currentMilliseconds}
-                onChange={(event) =>
-                  setSelectedUser({
-                    ...selectedUser,
-                    username: event.target.value,
-                  })
-                }
-              />
-
-              <TextField
-                value={selectedUser.email}
-                margin="normal"
-                fullWidth
-                label="Email"
-                onChange={(event) =>
-                  setSelectedUser({
-                    ...selectedUser,
-                    email: event.target.value,
-                  })
-                }
-              />
-
-              <FormControl fullWidth margin="normal">
-                <InputLabel id="edition-role-select-label">Role</InputLabel>
-                <Select
-                  labelId="edition-role-select-label"
-                  id="edition-role-select"
-                  value={selectedUser.role}
-                  label="Role"
-                  onChange={(event) =>
-                    setSelectedUser({
-                      ...selectedUser,
-                      role: event.target.value,
-                    })
-                  }
-                >
-                  <MenuItem value={"standard"}>Standard</MenuItem>
-                  <MenuItem value={"admin"}>Administrator</MenuItem>
-                </Select>
-              </FormControl>
-
-              <Box sx={{ mb: 2 }}>
-                <FileInput
-                  imageInputRef={editionImageInputRef}
-                  selectedImage={selectedImageForEdition}
-                  setSelectedImage={setSelectedImageForEdition}
-                />
-              </Box>
-            </>
-          )}
-
-          <Collapse in={isEditFormAlertOpen}>
-            <Alert
-              severity="warning"
-              action={
-                <IconButton
-                  aria-label="close"
-                  color="inherit"
-                  size="small"
-                  onClick={() => {
-                    setIsEditFormAlertOpen(false);
-                  }}
-                >
-                  <CloseIcon fontSize="inherit" />
-                </IconButton>
-              }
-              sx={{ mb: 2 }}
-            >
-              {editFormAlertMessage}
-            </Alert>
-          </Collapse>
-
-          <Box sx={{ position: "relative", mb: 3 }}>
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              onClick={editUser}
-              disabled={isUserEditLoading}
-            >
-              Save changes
-            </Button>
-            {isUserEditLoading && (
-              <CircularProgress
-                size={24}
-                sx={{
-                  color: green[500],
-                  position: "absolute",
-                  top: "50%",
-                  left: "50%",
-                  marginTop: "-12px",
-                  marginLeft: "-12px",
-                }}
-              />
-            )}
-          </Box>
-        </Box>
-      </Modal>
-
-      <Modal
-        open={isCreationModalOpen}
-        onClose={cleanAndCloseCreationModal}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-      >
-        <Box
-          sx={{
-            position: "absolute",
-            top: "50%",
-            left: "50%",
-            transform: "translate(-50%, -50%)",
-            width: 400,
-            bgcolor: "background.paper",
-            border: "2px solid #000",
-            boxShadow: 24,
-            p: 4,
-            outline: 0,
-          }}
-        >
-          <Typography id="modal-modal-title" variant="h6" component="h2">
-            New user
-          </Typography>
-
-          <TextField
-            value={firstname}
-            onChange={(event) => setFirstname(event.target.value)}
-            margin="normal"
-            fullWidth
-            label="First name"
-          />
-
-          <TextField
-            value={lastname}
-            onChange={(event) => setLastname(event.target.value)}
-            margin="normal"
-            fullWidth
-            label="Last name"
-          />
-
-          <TextField
-            value={email}
-            onChange={(event) => setEmail(event.target.value)}
-            margin="normal"
-            fullWidth
-            label="Email"
-          />
-
-          <TextField
-            value={username}
-            autoComplete={currentMilliseconds}
-            onChange={(event) => setUsername(event.target.value)}
-            margin="normal"
-            required
-            fullWidth
-            label="Username"
-          />
-
-          <TextField
-            value={password1}
-            autoComplete={currentMilliseconds}
-            onChange={(event) => setPassword1(event.target.value)}
-            margin="normal"
-            fullWidth
-            label="New password"
-            type="password"
-          />
-
-          <TextField
-            value={password2}
-            onChange={(event) => setPassword2(event.target.value)}
-            margin="normal"
-            fullWidth
-            label="Password confirmation"
-            type="password"
-            autoComplete={currentMilliseconds}
-          />
-
-          <FormControl fullWidth margin="normal">
-            <InputLabel id="creation-role-select-label">Role</InputLabel>
-            <Select
-              labelId="creation-role-select-label"
-              id="creation-role-select"
-              value={role}
-              label="Role"
-              onChange={handleRoleChange}
-            >
-              <MenuItem value={"standard"}>Standard</MenuItem>
-              <MenuItem value={"admin"}>Administrator</MenuItem>
-            </Select>
-          </FormControl>
-
-          <FileInput
-            imageInputRef={imageInputRef}
-            selectedImage={selectedImage}
-            setSelectedImage={setSelectedImage}
-          />
-
-          <Collapse in={isCreationFormAlertOpen}>
-            <Alert
-              severity="warning"
-              action={
-                <IconButton
-                  aria-label="close"
-                  color="inherit"
-                  size="small"
-                  onClick={cleanAndCloseCreationModal}
-                >
-                  <CloseIcon fontSize="inherit" />
-                </IconButton>
-              }
-              sx={{ mb: 2 }}
-            >
-              {creationFormAlertMessage}
-            </Alert>
-          </Collapse>
-
-          <Box sx={{ position: "relative", mb: 3 }}>
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              onClick={createUser}
-              disabled={isUserCreationLoading}
-            >
-              Add
-            </Button>
-            {isUserCreationLoading && (
-              <CircularProgress
-                size={24}
-                sx={{
-                  color: green[500],
-                  position: "absolute",
-                  top: "50%",
-                  left: "50%",
-                  marginTop: "-12px",
-                  marginLeft: "-12px",
-                }}
-              />
-            )}
-          </Box>
-        </Box>
-      </Modal>
+      <CreationModal
+        isCreationModalOpen={isCreationModalOpen}
+        cleanAndCloseCreationModal={cleanAndCloseCreationModal}
+        firstname={firstname}
+        setFirstname={setFirstname}
+        lastname={lastname}
+        setLastname={setLastname}
+        email={email}
+        setEmail={setEmail}
+        username={username}
+        currentMilliseconds={currentMilliseconds}
+        setUsername={setUsername}
+        password1={password1}
+        setPassword1={setPassword1}
+        password2={password2}
+        setPassword2={setPassword2}
+        role={role}
+        handleRoleChange={handleRoleChange}
+        imageInputRef={imageInputRef}
+        selectedImage={selectedImage}
+        setSelectedImage={setSelectedImage}
+        isCreationFormAlertOpen={isCreationFormAlertOpen}
+        creationFormAlertMessage={creationFormAlertMessage}
+        createUser={createUser}
+        isUserCreationLoading={isUserCreationLoading}
+      />
 
       <Title>User list</Title>
 
@@ -798,96 +432,17 @@ function Users() {
         Clear filter
       </Button>
 
-      {users.status !== "ERROR" && totalNumberOfPages > 0 && (
-        <Pagination
-          count={totalNumberOfPages}
-          page={currentPage}
-          onChange={(event, page) => handlePageChange(page)}
-          disabled={users.status !== "DONE" ? true : false}
-        />
-      )}
-
-      {users.status !== "DONE" && users.status !== "ERROR" && (
-        <CircularProgress />
-      )}
-
-      {users.status === "ERROR" && (
-        <Alert severity="error">
-          There was an error trying to get the user list
-        </Alert>
-      )}
-
-      {users.status === "DONE" && !users?.data?.length && (
-        <Alert severity="info">No users to show</Alert>
-      )}
-
-      {users.status === "DONE" && !!users?.data?.length && (
-        <>
-          <Table size="small">
-            <TableHead>
-              <TableRow>
-                {headCells.map((headCell) => (
-                  <TableCell
-                    key={headCell.id}
-                    align={headCell.numeric ? "right" : "left"}
-                    padding={headCell.disablePadding ? "none" : "normal"}
-                    sortDirection={orderBy === headCell.id ? order : false}
-                  >
-                    {headCell.withSort ? (
-                      <TableSortLabel
-                        active={orderBy === headCell.id}
-                        direction={orderBy === headCell.id ? order : "asc"}
-                        onClick={createSortHandler(headCell.id)}
-                      >
-                        {headCell.label}
-                        {orderBy === headCell.id ? (
-                          <Box component="span" sx={visuallyHidden}>
-                            {order === "desc"
-                              ? "sorted descending"
-                              : "sorted ascending"}
-                          </Box>
-                        ) : null}
-                      </TableSortLabel>
-                    ) : (
-                      headCell.label
-                    )}
-                  </TableCell>
-                ))}
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {users.data.map((row) => (
-                <TableRow key={row.id}>
-                  <TableCell>{row.firstname}</TableCell>
-                  <TableCell>{row.lastname}</TableCell>
-                  <TableCell>{row.username}</TableCell>
-                  <TableCell>{row.email}</TableCell>
-                  <TableCell>
-                    <Button
-                      type="submit"
-                      fullWidth
-                      variant="contained"
-                      sx={{ mb: 3 }}
-                      onClick={() => askForDeletionConfirmation(row)}
-                    >
-                      Delete
-                    </Button>
-                    <Button
-                      type="submit"
-                      fullWidth
-                      variant="contained"
-                      sx={{ mb: 3 }}
-                      onClick={() => showEditionForm(row)}
-                    >
-                      Edit
-                    </Button>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </>
-      )}
+      <UsersTable
+        users={users}
+        currentPage={currentPage}
+        handlePageChange={handlePageChange}
+        totalNumberOfPages={totalNumberOfPages}
+        order={order}
+        orderBy={orderBy}
+        createSortHandler={createSortHandler}
+        askForDeletionConfirmation={askForDeletionConfirmation}
+        showEditionForm={showEditionForm}
+      />
     </Container>
   );
 }
