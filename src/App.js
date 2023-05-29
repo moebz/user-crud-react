@@ -15,6 +15,9 @@ import { RequireAuth } from "./RequireAuth";
 import { Users } from "./Users";
 import { ResponsiveAppBar } from "./ResponsiveAppBar";
 import api from "./api";
+import { AppWithDrawerV1 } from "./AppWithDrawerV1";
+
+import CssBaseline from "@mui/material/CssBaseline";
 
 function App() {
   // Init custom history object to allow navigation from
@@ -53,7 +56,8 @@ function App() {
 
   return (
     <>
-      <ResponsiveAppBar
+      <CssBaseline />
+      <AppWithDrawerV1
         currentUser={currentUser}
         currentUserData={currentUserData}
         logOut={logOut}
