@@ -40,9 +40,8 @@ function ResponsiveAppBar({
       <Toolbar>
         <Box
           sx={{
-            flexGrow: 1,
+            flexGrow: 0,
             display: { xs: "flex" },
-            backgroundColor: "green",
           }}
         >
           <IconButton
@@ -61,7 +60,6 @@ function ResponsiveAppBar({
           component="a"
           href="/"
           sx={{
-            mr: 2,
             display: { xs: "none", md: "flex" },
             flexGrow: 1,
             fontFamily: "monospace",
@@ -69,7 +67,7 @@ function ResponsiveAppBar({
             letterSpacing: ".3rem",
             color: "inherit",
             textDecoration: "none",
-            backgroundColor: "red",
+            marginLeft: 2,
           }}
         >
           Users
@@ -89,12 +87,12 @@ function ResponsiveAppBar({
             letterSpacing: ".3rem",
             color: "inherit",
             textDecoration: "none",
-            backgroundColor: "pink",
+            marginLeft: 1,
           }}
         >
           Users
         </Typography>
-        
+
         <Box sx={{ flexGrow: 0 }}>
           <Tooltip title="Account menu">
             <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
