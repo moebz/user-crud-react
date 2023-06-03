@@ -5,7 +5,6 @@ import Container from "@mui/material/Container";
 function Home() {
   return (
     <Container component="main" maxWidth="xs">
-      <CssBaseline />
       Home
     </Container>
   );

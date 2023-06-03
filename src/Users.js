@@ -13,6 +13,7 @@ import { UsersTable } from "./UsersTable";
 import { DeletionModal } from "./DeletionModal";
 import { CreationModal } from "./CreationModal";
 import { EditionModal } from "./EditionModal";
+import { Grid, Stack } from "@mui/material";
 
 const DEFAULT_PAGE_SIZE = 12;
 const DEFAULT_ORDER = "asc";
@@ -202,13 +203,9 @@ function Users() {
       formData.append("username", selectedUser.username);
       formData.append("role", selectedUser.role);
 
-      await api.post(
-        `/users/${selectedUser.id}/update`,
-        formData,
-        {
-          headers: { "Content-Type": "multipart/form-data" },
-        }
-      );
+      await api.post(`/users/${selectedUser.id}/update`, formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
 
       await getUsersAndSetState({
         pageNumber: 1,
@@ -327,9 +324,7 @@ function Users() {
   const totalNumberOfPages = Math.ceil(total / DEFAULT_PAGE_SIZE);
 
   return (
-    <Container component="main" maxWidth="xs" sx={{ marginTop: 4 }}>
-      <CssBaseline />
-
+    <Container component="main" sx={{ marginTop: 2 }}>
       <Snackbar
         open={isSnackbarOpen}
         autoHideDuration={6000}
@@ -391,46 +386,63 @@ function Users() {
         isUserCreationLoading={isUserCreationLoading}
       />
 
-      <Title>User list</Title>
-
-      <Button
-        type="submit"
-        fullWidth
-        variant="contained"
-        sx={{ mb: 3 }}
-        onClick={showCreationForm}
+      <Grid
+        container
+        direction="row"
+        justifyContent="space-between"
+        alignItems="center"
       >
-        Add new user
-      </Button>
+        <Title>User list</Title>
 
-      <TextField
-        margin="normal"
-        fullWidth
-        label="Filter by name, username or email"
-        onChange={(event) => setFilter(event.target.value)}
-        autoComplete={currentMilliseconds}
-        value={filter}
-      />
+        <Button
+          type="submit"
+          variant="contained"
+          sx={{ mb: 3 }}
+          onClick={showCreationForm}
+        >
+          Add new user
+        </Button>
+      </Grid>
 
-      <Button
-        type="submit"
-        fullWidth
-        variant="contained"
-        sx={{ mb: 1 }}
-        onClick={handleApplyFilter}
+      <Stack
+        direction={{ xs: "column", sm: "row" }}
+        justifyContent={{ xs: "flex-start", sm: "center" }}
+        alignItems="center"
+        spacing={2}
+        sx={{ mb: 2 }}
       >
-        Apply filter
-      </Button>
+        <TextField
+          margin="normal"
+          label="Filter by name, username or email"
+          onChange={(event) => setFilter(event.target.value)}
+          autoComplete={currentMilliseconds}
+          value={filter}
+          sx={{ minWidth: 300, maxWidth: 400 }}
+          fullWidth
+        />
 
-      <Button
-        type="submit"
-        fullWidth
-        variant="contained"
-        sx={{ mb: 3 }}
-        onClick={clearFilter}
-      >
-        Clear filter
-      </Button>
+        <Stack
+          direction={{ xs: "row", sm: "row" }}
+          justifyContent={{ xs: "flex-start" }}
+          // alignItems={{ xs: "flex-end", sm: "center" }}
+          // spacing={2}
+          // sx={{ mb: 2 }}
+          alignSelf={{ xs: "flex-end", sm: "center" }}
+        >
+          <Button
+            type="submit"
+            variant="contained"
+            onClick={handleApplyFilter}
+            sx={{ mr: 1 }}
+          >
+            Apply
+          </Button>
+
+          <Button type="submit" variant="contained" onClick={clearFilter}>
+            Clear
+          </Button>
+        </Stack>
+      </Stack>
 
       <UsersTable
         users={users}
