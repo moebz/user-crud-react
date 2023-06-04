@@ -409,7 +409,7 @@ function Users() {
         justifyContent={{ xs: "flex-start", sm: "center" }}
         alignItems="center"
         spacing={2}
-        sx={{ mb: 2 }}
+        sx={{ mb: 4 }}
       >
         <TextField
           margin="normal"
@@ -438,7 +438,7 @@ function Users() {
             Apply
           </Button>
 
-          <Button type="submit" variant="contained" onClick={clearFilter}>
+          <Button type="submit" variant="text" onClick={clearFilter}>
             Clear
           </Button>
         </Stack>

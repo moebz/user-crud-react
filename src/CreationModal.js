@@ -6,6 +6,11 @@ import {
   Alert,
   CircularProgress,
   Collapse,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
   TableSortLabel,
 } from "@mui/material";
 import IconButton from "@mui/material/IconButton";
@@ -48,30 +53,9 @@ function CreationModal({
 }) {
   return (
     <>
-      <Modal
-        open={isCreationModalOpen}
-        onClose={cleanAndCloseCreationModal}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-      >
-        <Box
-          sx={{
-            position: "absolute",
-            top: "50%",
-            left: "50%",
-            transform: "translate(-50%, -50%)",
-            width: 400,
-            bgcolor: "background.paper",
-            border: "2px solid #000",
-            boxShadow: 24,
-            p: 4,
-            outline: 0,
-          }}
-        >
-          <Typography id="modal-modal-title" variant="h6" component="h2">
-            New user
-          </Typography>
-
+      <Dialog open={isCreationModalOpen} onClose={cleanAndCloseCreationModal}>
+        <DialogTitle>New user</DialogTitle>
+        <DialogContent>
           <TextField
             value={firstname}
             onChange={(event) => setFirstname(event.target.value)}
@@ -126,7 +110,7 @@ function CreationModal({
             autoComplete={currentMilliseconds}
           />
 
-          <FormControl fullWidth margin="normal">
+          <FormControl fullWidth margin="normal" sx={{ mb: 3 }}>
             <InputLabel id="creation-role-select-label">Role</InputLabel>
             <Select
               labelId="creation-role-select-label"
@@ -165,13 +149,19 @@ function CreationModal({
             </Alert>
           </Collapse>
 
-          <Box sx={{ position: "relative", mb: 3 }}>
+          <Box
+            sx={{
+              position: "relative",
+              display: "flex",
+              justifyContent: "flex-end",
+            }}
+          >
             <Button
               type="submit"
-              fullWidth
               variant="contained"
               onClick={createUser}
               disabled={isUserCreationLoading}
+              sx={{ minWidth: 200 }}
             >
               Add
             </Button>
@@ -189,8 +179,35 @@ function CreationModal({
               />
             )}
           </Box>
-        </Box>
-      </Modal>
+        </DialogContent>
+        {/* <DialogActions>
+          <Button onClick={handleClose}>Cancel</Button>
+          <Button onClick={handleClose}>Subscribe</Button>
+        </DialogActions> */}
+      </Dialog>
+      {/* <Modal
+        open={isCreationModalOpen}
+        onClose={cleanAndCloseCreationModal}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+        sx={{ borderWidth: 0 }}
+      >
+        <Box
+          sx={{
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            width: 400,
+            bgcolor: "background.paper",
+            border: "2px solid #000",
+            boxShadow: 24,
+            p: 4,
+            outline: 0,
+          }}
+        >
+          
+      </Modal> */}
     </>
   );
 }

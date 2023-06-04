@@ -67,7 +67,7 @@ function UsersTable({
   return (
     <>
       {users.status !== "ERROR" && totalNumberOfPages > 0 && (
-        <Stack alignItems="center">
+        <Stack alignItems="center" sx={{ mb: 2 }}>
           <Pagination
             count={totalNumberOfPages}
             page={currentPage}
@@ -134,24 +134,26 @@ function UsersTable({
                     <TableCell>{row.username}</TableCell>
                     <TableCell>{row.email}</TableCell>
                     <TableCell>
-                      <Button
-                        type="submit"
-                        fullWidth
-                        variant="contained"
-                        sx={{ mb: 3 }}
-                        onClick={() => askForDeletionConfirmation(row)}
+                      <Stack
+                        direction={{ xs: "column", md: "row" }}
+                        spacing={1}
+                        justifyContent={{ xs: "flex-start" }}
                       >
-                        Delete
-                      </Button>
-                      <Button
-                        type="submit"
-                        fullWidth
-                        variant="contained"
-                        sx={{ mb: 3 }}
-                        onClick={() => showEditionForm(row)}
-                      >
-                        Edit
-                      </Button>
+                        <Button
+                          fullWidth
+                          variant="text"
+                          onClick={() => showEditionForm(row)}
+                        >
+                          Edit
+                        </Button>
+                        <Button
+                          fullWidth
+                          variant="text"
+                          onClick={() => askForDeletionConfirmation(row)}
+                        >
+                          Delete
+                        </Button>
+                      </Stack>
                     </TableCell>
                   </TableRow>
                 ))}
