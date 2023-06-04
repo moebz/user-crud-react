@@ -1,12 +1,11 @@
 import React from "react";
 import Box from "@mui/material/Box";
-import Typography from "@mui/material/Typography";
-import Modal from "@mui/material/Modal";
 import {
   Alert,
-  CircularProgress,
   Collapse,
-  TableSortLabel,
+  Dialog,
+  DialogContent,
+  DialogTitle,
 } from "@mui/material";
 import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
@@ -15,8 +14,6 @@ import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
-import Button from "@mui/material/Button";
-import { green } from "@mui/material/colors";
 import { FileInput } from "./general/FileInput";
 import { ButtonWithLoader } from "./general/ButtonWithLoader";
 
@@ -37,30 +34,9 @@ function EditionModal({
 }) {
   return (
     <>
-      <Modal
-        open={isEditModalOpen}
-        onClose={handleEditModalClose}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-      >
-        <Box
-          sx={{
-            position: "absolute",
-            top: "50%",
-            left: "50%",
-            transform: "translate(-50%, -50%)",
-            width: 400,
-            bgcolor: "background.paper",
-            border: "2px solid #000",
-            boxShadow: 24,
-            p: 4,
-            outline: 0,
-          }}
-        >
-          <Typography id="modal-modal-title" variant="h6" component="h2">
-            Edit user
-          </Typography>
-
+      <Dialog open={isEditModalOpen} onClose={handleEditModalClose}>
+        <DialogTitle>Edit user</DialogTitle>
+        <DialogContent>
           {selectedUser && (
             <>
               <TextField
@@ -167,32 +143,20 @@ function EditionModal({
             </Alert>
           </Collapse>
 
-          <Box sx={{ position: "relative", mb: 3 }}>
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              onClick={editUser}
-              disabled={isUserEditLoading}
-            >
-              Save changes
-            </Button>
-            {isUserEditLoading && (
-              <CircularProgress
-                size={24}
-                sx={{
-                  color: green[500],
-                  position: "absolute",
-                  top: "50%",
-                  left: "50%",
-                  marginTop: "-12px",
-                  marginLeft: "-12px",
-                }}
-              />
-            )}
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "flex-end",
+            }}
+          >
+            <ButtonWithLoader
+              onButtonClick={editUser}
+              isLoading={isUserEditLoading}
+              buttonText="Save changes"
+            />
           </Box>
-        </Box>
-      </Modal>
+        </DialogContent>
+      </Dialog>
     </>
   );
 }

@@ -11,7 +11,7 @@ function ButtonWithLoader({
   buttonText,
 }) {
   return (
-    <Box sx={{ position: "relative", mb: 3 }}>
+    <Box sx={{ position: "relative" }}>
       <Button
         type="submit"
         fullWidth

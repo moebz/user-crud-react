@@ -1,17 +1,12 @@
 import React from "react";
 import Box from "@mui/material/Box";
-import Typography from "@mui/material/Typography";
-import Modal from "@mui/material/Modal";
 import {
   Alert,
   CircularProgress,
   Collapse,
   Dialog,
-  DialogActions,
   DialogContent,
-  DialogContentText,
   DialogTitle,
-  TableSortLabel,
 } from "@mui/material";
 import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
@@ -151,63 +146,18 @@ function CreationModal({
 
           <Box
             sx={{
-              position: "relative",
               display: "flex",
               justifyContent: "flex-end",
             }}
           >
-            <Button
-              type="submit"
-              variant="contained"
-              onClick={createUser}
-              disabled={isUserCreationLoading}
-              sx={{ minWidth: 200 }}
-            >
-              Add
-            </Button>
-            {isUserCreationLoading && (
-              <CircularProgress
-                size={24}
-                sx={{
-                  color: green[500],
-                  position: "absolute",
-                  top: "50%",
-                  left: "50%",
-                  marginTop: "-12px",
-                  marginLeft: "-12px",
-                }}
-              />
-            )}
+            <ButtonWithLoader
+              onButtonClick={createUser}
+              isLoading={isUserCreationLoading}
+              buttonText="Add"
+            />
           </Box>
         </DialogContent>
-        {/* <DialogActions>
-          <Button onClick={handleClose}>Cancel</Button>
-          <Button onClick={handleClose}>Subscribe</Button>
-        </DialogActions> */}
       </Dialog>
-      {/* <Modal
-        open={isCreationModalOpen}
-        onClose={cleanAndCloseCreationModal}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-        sx={{ borderWidth: 0 }}
-      >
-        <Box
-          sx={{
-            position: "absolute",
-            top: "50%",
-            left: "50%",
-            transform: "translate(-50%, -50%)",
-            width: 400,
-            bgcolor: "background.paper",
-            border: "2px solid #000",
-            boxShadow: 24,
-            p: 4,
-            outline: 0,
-          }}
-        >
-          
-      </Modal> */}
     </>
   );
 }
