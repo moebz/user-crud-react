@@ -17,7 +17,7 @@ function FileInput({ imageInputRef, selectedImage, setSelectedImage }) {
         }}
       />
 
-      <Card sx={{ minWidth: 275, mb: 2 }} variant="outlined">
+      <Card sx={{ minWidth: 162, mb: 2 }} variant="outlined">
         <CardContent>
           <Typography
             sx={{
@@ -31,7 +31,7 @@ function FileInput({ imageInputRef, selectedImage, setSelectedImage }) {
             Profile photo
           </Typography>
           <Stack
-            direction="row"
+            direction={{ xs: "column", sm: "row" }}
             justifyContent="flex-start"
             alignItems="center"
             spacing={1}

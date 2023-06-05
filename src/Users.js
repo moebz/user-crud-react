@@ -388,7 +388,7 @@ function Users() {
 
       <Grid
         container
-        direction="row"
+        direction={{ xs: "column", sm: "row" }}
         justifyContent="space-between"
         alignItems="center"
       >
@@ -417,7 +417,7 @@ function Users() {
           onChange={(event) => setFilter(event.target.value)}
           autoComplete={currentMilliseconds}
           value={filter}
-          sx={{ minWidth: 300, maxWidth: 400 }}
+          sx={{ minWidth: 210, maxWidth: 400 }}
           fullWidth
         />
 
@@ -427,7 +427,7 @@ function Users() {
           // alignItems={{ xs: "flex-end", sm: "center" }}
           // spacing={2}
           // sx={{ mb: 2 }}
-          alignSelf={{ xs: "flex-end", sm: "center" }}
+          alignSelf={{ xs: "center", sm: "center" }}
         >
           <Button
             type="submit"
