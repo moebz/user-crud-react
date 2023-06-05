@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from "react";
 import Button from "@mui/material/Button";
-import CssBaseline from "@mui/material/CssBaseline";
-import TextField from "@mui/material/TextField";
 import Container from "@mui/material/Container";
 import Title from "./Title";
 import Snackbar from "@mui/material/Snackbar";
@@ -13,7 +11,8 @@ import { UsersTable } from "./UsersTable";
 import { DeletionModal } from "./DeletionModal";
 import { CreationModal } from "./CreationModal";
 import { EditionModal } from "./EditionModal";
-import { Grid, Stack } from "@mui/material";
+import { Grid } from "@mui/material";
+import { Filter } from "./Filter";
 
 const DEFAULT_PAGE_SIZE = 12;
 const DEFAULT_ORDER = "asc";
@@ -404,45 +403,13 @@ function Users() {
         </Button>
       </Grid>
 
-      <Stack
-        direction={{ xs: "column", sm: "row" }}
-        justifyContent={{ xs: "flex-start", sm: "center" }}
-        alignItems="center"
-        spacing={2}
-        sx={{ mb: 4 }}
-      >
-        <TextField
-          margin="normal"
-          label="Filter by name, username or email"
-          onChange={(event) => setFilter(event.target.value)}
-          autoComplete={currentMilliseconds}
-          value={filter}
-          sx={{ minWidth: 210, maxWidth: 400 }}
-          fullWidth
-        />
-
-        <Stack
-          direction={{ xs: "row", sm: "row" }}
-          justifyContent={{ xs: "flex-start" }}
-          // alignItems={{ xs: "flex-end", sm: "center" }}
-          // spacing={2}
-          // sx={{ mb: 2 }}
-          alignSelf={{ xs: "center", sm: "center" }}
-        >
-          <Button
-            type="submit"
-            variant="contained"
-            onClick={handleApplyFilter}
-            sx={{ mr: 1 }}
-          >
-            Apply
-          </Button>
-
-          <Button type="submit" variant="text" onClick={clearFilter}>
-            Clear
-          </Button>
-        </Stack>
-      </Stack>
+      <Filter
+        setFilter={setFilter}
+        currentMilliseconds={currentMilliseconds}
+        filter={filter}
+        handleApplyFilter={handleApplyFilter}
+        clearFilter={clearFilter}
+      />
 
       <UsersTable
         users={users}
