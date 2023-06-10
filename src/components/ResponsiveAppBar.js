@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { history } from "./history";
+import { history } from "./../utils/history";
 import { styled, useTheme } from "@mui/material/styles";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";

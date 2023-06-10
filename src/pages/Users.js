@@ -1,18 +1,18 @@
 import React, { useState, useEffect } from "react";
 import Button from "@mui/material/Button";
 import Container from "@mui/material/Container";
-import Title from "./Title";
+import Title from "./../components/Title";
 import Snackbar from "@mui/material/Snackbar";
 import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
-import api from "./api";
-import { getCurrentMilliseconds, sleep } from "./utils";
-import { UsersTable } from "./UsersTable";
-import { DeletionModal } from "./DeletionModal";
-import { CreationModal } from "./CreationModal";
-import { EditionModal } from "./EditionModal";
 import { Grid } from "@mui/material";
-import { Filter } from "./Filter";
+import api from "./../utils/api";
+import { getCurrentMilliseconds, sleep } from "./../utils/utils";
+import { UsersTable } from "./../components/UsersTable";
+import { DeletionModal } from "./../components/DeletionModal";
+import { CreationModal } from "./../components/CreationModal";
+import { EditionModal } from "./../components/EditionModal";
+import { Filter } from "./../components/Filter";
 
 const DEFAULT_PAGE_SIZE = 12;
 const DEFAULT_ORDER = "asc";

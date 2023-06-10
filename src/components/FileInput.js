@@ -73,7 +73,6 @@ function FileInput({ imageInputRef, selectedImage, setSelectedImage }) {
             {selectedImage && (
               <div
                 style={{
-                  // backgroundColor: "purple",
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
@@ -81,7 +80,6 @@ function FileInput({ imageInputRef, selectedImage, setSelectedImage }) {
               >
                 <Typography
                   sx={{
-                    // backgroundColor: "pink",
                     maxHeight: "75px",
                     maxWidth: "250px",
                     overflowY: "auto",

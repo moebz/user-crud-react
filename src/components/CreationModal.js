@@ -2,7 +2,6 @@ import React from "react";
 import Box from "@mui/material/Box";
 import {
   Alert,
-  CircularProgress,
   Collapse,
   Dialog,
   DialogContent,
@@ -15,10 +14,8 @@ import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
-import Button from "@mui/material/Button";
-import { green } from "@mui/material/colors";
-import { FileInput } from "./general/FileInput";
-import { ButtonWithLoader } from "./general/ButtonWithLoader";
+import { FileInput } from "./FileInput";
+import { ButtonWithLoader } from "./ButtonWithLoader";
 
 function CreationModal({
   isCreationModalOpen,

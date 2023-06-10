@@ -4,7 +4,7 @@
 // If they are: they proceed to the page
 // If not: they are redirected to the login page.
 import React from "react";
-import { authService } from "./authService";
+import { authService } from "./../utils/authService";
 import { Navigate, useLocation } from "react-router-dom";
 
 function RequireAuth({ children }) {

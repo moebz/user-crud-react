@@ -1,41 +1,28 @@
 import React, { useState, useEffect } from "react";
-import { Login } from "./Login";
-import { Home } from "./Home";
-import { Landing } from "./Landing";
-import {
-  Routes,
-  Route,
-  Link,
-  useNavigate,
-  useLocation,
-} from "react-router-dom";
-import { authService } from "./authService";
-import { history } from "./history";
-import { RequireAuth } from "./RequireAuth";
-import { Users } from "./Users";
-import { ResponsiveAppBar } from "./ResponsiveAppBar";
-import api from "./api";
+import { Routes, Route, useNavigate, useLocation } from "react-router-dom";
 
+import { styled } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
-
-import { styled, useTheme } from "@mui/material/styles";
 import Box from "@mui/material/Box";
 import MuiDrawer from "@mui/material/Drawer";
-import MuiAppBar from "@mui/material/AppBar";
-import Toolbar from "@mui/material/Toolbar";
 import List from "@mui/material/List";
-import Typography from "@mui/material/Typography";
-import Divider from "@mui/material/Divider";
-import IconButton from "@mui/material/IconButton";
-import MenuIcon from "@mui/icons-material/Menu";
-import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
-import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
-import InboxIcon from "@mui/icons-material/MoveToInbox";
 import ManageSearch from "@mui/icons-material/ManageSearch";
+
+import { Login } from "./pages/Login";
+import { Home } from "./pages/Home";
+import { Landing } from "./pages/Landing";
+import { Users } from "./pages/Users";
+
+import { authService } from "./utils/authService";
+import { history } from "./utils/history";
+import api from "./utils/api";
+
+import { RequireAuth } from "./components/RequireAuth";
+import { ResponsiveAppBar } from "./components/ResponsiveAppBar";
 
 const drawerWidth = 240;
 
@@ -71,6 +58,7 @@ const DrawerHeader = styled("div")(({ theme }) => ({
 
 const Drawer = styled(MuiDrawer, {
   shouldForwardProp: (prop) => prop !== "open",
+  // @ts-ignore
 })(({ theme, open }) => ({
   width: drawerWidth,
   flexShrink: 0,
@@ -95,7 +83,6 @@ function App() {
   const [currentUser, setCurrentUser] = useState(null);
   const [currentUserData, setCurrentUserData] = useState(null);
 
-  const theme = useTheme();
   const [open, setOpen] = React.useState(false);
 
   const handleDrawerOpen = () => {
@@ -127,7 +114,7 @@ function App() {
         requestUserDataAndSaveItInState(user);
       }
     }
-  }, []);
+  }, [currentUserData]);
 
   const logOut = () => {
     setCurrentUser(null);
@@ -185,9 +172,6 @@ function App() {
                 <Login
                   setCurrentUser={setCurrentUser}
                   setCurrentUserData={setCurrentUserData}
-                  requestUserDataAndSaveItInState={
-                    requestUserDataAndSaveItInState
-                  }
                 />
               }
             />

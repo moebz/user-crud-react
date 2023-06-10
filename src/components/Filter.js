@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Button, Grid, Stack, TextField } from "@mui/material";
+import { Button, Stack, TextField } from "@mui/material";
 
 function Filter({
   setFilter,

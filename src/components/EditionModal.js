@@ -14,8 +14,8 @@ import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
-import { FileInput } from "./general/FileInput";
-import { ButtonWithLoader } from "./general/ButtonWithLoader";
+import { FileInput } from "./FileInput";
+import { ButtonWithLoader } from "./ButtonWithLoader";
 
 function EditionModal({
   currentMilliseconds,
