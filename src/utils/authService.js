@@ -12,22 +12,22 @@ const login = async (username, passwd, setCurrentUser) => {
 
   console.log("login.response.data", response.data);
 
-  if (response?.data?.data?.accessToken) {
-    console.log("login.setInLocalStorage");
-
-    const userDataToSet = response.data.data;
-
-    // Store in localStorage
-
-    setUser(userDataToSet);
-
-    // Set in App state
-
-    setCurrentUser(userDataToSet);
-  } else {
+  if (!response?.data?.data?.accessToken) {
     console.log("login.notSettingInLocalStorage");
     throw new Error("Login didn't return necessary data");
   }
+
+  console.log("login.setInLocalStorage");
+
+  const userDataToSet = response.data.data;
+
+  // Store in localStorage
+
+  setUser(userDataToSet);
+
+  // Set in App state
+
+  setCurrentUser(userDataToSet);
 };
 
 const logout = () => {
@@ -63,7 +63,7 @@ const setUser = (user) => {
 
   const decodedToken = jwtDecode(user.accessToken);
   console.log("decodedToken", decodedToken);
-  
+
   user.decodedToken = decodedToken;
 
   console.log("setUser.modifiedUserData", JSON.stringify(user));
@@ -77,7 +77,29 @@ const removeUser = () => {
 
 const isLoggedIn = () => {
   const user = getUser();
-  return Boolean(user);
+
+  if (!user) {
+    logout();
+    return false;
+  }
+
+  const refreshToken = user?.refreshToken;
+
+  if (!refreshToken) {
+    logout();
+    return false;
+  }
+
+  let decodedToken = jwtDecode(refreshToken);
+  let currentDate = new Date();
+
+  // JWT exp is in seconds
+  if (decodedToken.exp * 1000 < currentDate.getTime()) {
+    logout();
+    return false;
+  }
+
+  return true;
 };
 
 const logoutAndRedirectToLogin = () => {

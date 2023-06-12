@@ -1,22 +1,21 @@
 import React, { useState } from "react";
 import Avatar from "@mui/material/Avatar";
-import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import Box from "@mui/material/Box";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { authService } from "./../utils/authService";
-import { green } from "@mui/material/colors";
-
 import { useNavigate } from "react-router-dom";
-import { CircularProgress } from "@mui/material";
-
 import api from "./../utils/api";
+import { ButtonWithLoader } from "../components/ButtonWithLoader";
+import { CollapsableAlert } from "../components/CollapsableAlert";
 
 function Login({ setCurrentUser, setCurrentUserData }) {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
+  const [isAlertOpen, setIsAlertOpen] = useState(false);
+  const [alertMessage, setAlertMessage] = useState("");
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -52,9 +51,20 @@ function Login({ setCurrentUser, setCurrentUserData }) {
       console.log({
         resMessage,
       });
+
+      setAlertMessage(resMessage);
+      openAlert();
     } finally {
       setLoading(false);
     }
+  };
+
+  const openAlert = () => {
+    setIsAlertOpen(true);
+  };
+
+  const closeAlert = () => {
+    setIsAlertOpen(false);
   };
 
   return (
@@ -70,11 +80,18 @@ function Login({ setCurrentUser, setCurrentUserData }) {
         <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
           <LockOutlinedIcon />
         </Avatar>
-        <Typography component="h1" variant="h5">
+
+        <Typography component="h1" variant="h5" sx={{ mb: 2 }}>
           Sign in
         </Typography>
 
-        <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
+        <CollapsableAlert
+          isAlertOpen={isAlertOpen}
+          closeAlert={closeAlert}
+          alertMessage={alertMessage}
+        />
+
+        <Box component="form" onSubmit={handleSubmit} noValidate>
           <TextField
             margin="normal"
             required
@@ -98,29 +115,11 @@ function Login({ setCurrentUser, setCurrentUserData }) {
             sx={{ mb: 3 }}
           />
 
-          <Box sx={{ position: "relative" }}>
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              disabled={loading}
-            >
-              Sign in
-            </Button>
-            {loading && (
-              <CircularProgress
-                size={24}
-                sx={{
-                  color: green[500],
-                  position: "absolute",
-                  top: "50%",
-                  left: "50%",
-                  marginTop: "-12px",
-                  marginLeft: "-12px",
-                }}
-              />
-            )}
-          </Box>
+          <ButtonWithLoader
+            type="submit"
+            isLoading={loading}
+            buttonText="Sign in"
+          />
         </Box>
       </Box>
     </Container>

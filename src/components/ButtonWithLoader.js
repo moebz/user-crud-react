@@ -5,7 +5,8 @@ import { green } from "@mui/material/colors";
 import { CircularProgress } from "@mui/material";
 
 function ButtonWithLoader({
-  onButtonClick,
+  type = undefined,
+  onButtonClick = undefined,
   isLoading,
   disableWhenLoading = true,
   buttonText,
@@ -13,8 +14,8 @@ function ButtonWithLoader({
   return (
     <Box sx={{ position: "relative" }}>
       <Button
-        type="submit"
         fullWidth
+        type={type}
         variant="contained"
         onClick={onButtonClick}
         disabled={disableWhenLoading ? isLoading : false}
