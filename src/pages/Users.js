@@ -13,10 +13,8 @@ import { DeletionModal } from "./../components/DeletionModal";
 import { CreationModal } from "./../components/CreationModal";
 import { EditionModal } from "./../components/EditionModal";
 import { Filter } from "./../components/Filter";
-
-const DEFAULT_PAGE_SIZE = 12;
-const DEFAULT_ORDER = "asc";
-const DEFAULT_ORDER_BY = "username";
+import useGetUsers from "../utils/useGetUsers";
+import { DEFAULT_PAGE_SIZE } from "../utils/constants";
 
 function Users() {
   const currentMilliseconds = getCurrentMilliseconds();
@@ -24,15 +22,18 @@ function Users() {
   const [isSnackbarOpen, setIsSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
 
-  const [users, setUsers] = useState({
-    data: [],
-    status: "IDLE",
-  });
-  const [filter, setFilter] = useState("");
-  const [currentPage, setCurrentPage] = useState(1);
-  const [total, setTotal] = useState(0);
-  const [order, setOrder] = React.useState(DEFAULT_ORDER);
-  const [orderBy, setOrderBy] = React.useState(DEFAULT_ORDER_BY);
+  const {
+    users,
+    filter,
+    setFilter,
+    currentPage,
+    total,
+    order,
+    setOrder,
+    orderBy,
+    setOrderBy,
+    getUsersAndSetState,
+  } = useGetUsers({ setIsSnackbarOpen, setSnackbarMessage });
 
   const [selectedUser, setSelectedUser] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -62,43 +63,6 @@ function Users() {
   const [selectedImageForEdition, setSelectedImageForEdition] = useState(null);
   const imageInputRef = React.useRef();
   const editionImageInputRef = React.useRef();
-
-  async function getUsersAndSetState(params) {
-    try {
-      setUsers((users) => ({ ...users, status: "LOADING" }));
-
-      //      await sleep(3000);
-
-      const result = await api.get("/users", {
-        params,
-      });
-      console.log("getUsersAndSetState.result.data", result.data);
-
-      if (result.data.data.rows) {
-        setUsers({ data: result.data.data.rows, status: "DONE" });
-      } else {
-        setUsers({ data: [], status: "DONE" });
-      }
-
-      setCurrentPage(params.pageNumber);
-      setTotal(parseInt(result.data.data.total, 10));
-    } catch (error) {
-      console.error(error);
-      setUsers({ data: [], status: "ERROR" });
-      setSnackbarMessage("There was an error trying to get the user list");
-      setIsSnackbarOpen(true);
-    }
-  }
-
-  useEffect(() => {
-    getUsersAndSetState({
-      pageNumber: 1,
-      pageSize: DEFAULT_PAGE_SIZE,
-      filter,
-      orderBy,
-      orderDirection: order,
-    });
-  }, []);
 
   function handlePageChange(pageNumber) {
     getUsersAndSetState({
