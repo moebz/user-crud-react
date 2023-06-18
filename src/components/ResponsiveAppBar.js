@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { history } from "./../utils/history";
-import { styled, useTheme } from "@mui/material/styles";
+import { useTheme } from "@mui/material/styles";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
@@ -8,9 +8,7 @@ import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
 import Menu from "@mui/material/Menu";
 import MenuIcon from "@mui/icons-material/Menu";
-import Container from "@mui/material/Container";
 import Avatar from "@mui/material/Avatar";
-import Button from "@mui/material/Button";
 import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 import PersonIcon from "@mui/icons-material/Person";
@@ -20,6 +18,7 @@ function ResponsiveAppBar({
   currentUserData,
   onBurgerClick,
   logOut,
+  closeDrawerAndGoTo,
 }) {
   const theme = useTheme();
   const [anchorElUser, setAnchorElUser] = useState(null);
@@ -58,7 +57,7 @@ function ResponsiveAppBar({
           variant="h6"
           noWrap
           component="a"
-          href="/"
+          onClick={() => closeDrawerAndGoTo("/")}
           sx={{
             display: { xs: "none", md: "flex" },
             flexGrow: 1,
@@ -77,7 +76,7 @@ function ResponsiveAppBar({
           variant="h5"
           noWrap
           component="a"
-          href="/"
+          onClick={() => closeDrawerAndGoTo("/")}
           sx={{
             mr: 2,
             display: { xs: "flex", md: "none" },

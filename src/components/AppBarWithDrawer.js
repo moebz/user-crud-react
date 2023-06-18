@@ -1,7 +1,8 @@
-import React from "react";
+import React, { useState } from "react";
 import { ResponsiveAppBar } from "./ResponsiveAppBar";
 import { CustomDrawer } from "./CustomDrawer";
 import { authService } from "../utils/authService";
+import { history } from "../utils/history";
 
 function AppBarWithDrawer({
   currentUser,
@@ -9,7 +10,7 @@ function AppBarWithDrawer({
   currentUserData,
   setCurrentUserData,
 }) {
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = useState(false);
 
   const logOut = () => {
     setCurrentUser(null);
@@ -25,6 +26,11 @@ function AppBarWithDrawer({
     setOpen(false);
   };
 
+  const closeDrawerAndGoTo = (url) => {
+    history.navigate(url);
+    handleDrawerClose();
+  };
+
   return (
     <>
       <ResponsiveAppBar
@@ -32,8 +38,9 @@ function AppBarWithDrawer({
         currentUserData={currentUserData}
         logOut={logOut}
         onBurgerClick={() => (!open ? handleDrawerOpen() : handleDrawerClose())}
+        closeDrawerAndGoTo={closeDrawerAndGoTo}
       />
-      <CustomDrawer open={open} handleDrawerClose={handleDrawerClose} />
+      <CustomDrawer open={open} closeDrawerAndGoTo={closeDrawerAndGoTo} />
     </>
   );
 }

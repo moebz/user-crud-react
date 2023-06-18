@@ -9,6 +9,7 @@ import ManageSearch from "@mui/icons-material/ManageSearch";
 import { styled } from "@mui/material/styles";
 import { history } from "../utils/history";
 import { DrawerHeader } from "./DrawerHeader";
+import { Home } from "@mui/icons-material";
 
 const drawerWidth = 240;
 
@@ -51,11 +52,20 @@ const Drawer = styled(MuiDrawer, {
   }),
 }));
 
-function CustomDrawer({ open, handleDrawerClose }) {
-  const closeMenuAndGoToUserList = () => {
-    history.navigate("/users");
-    handleDrawerClose();
+function CustomDrawer({ open, closeDrawerAndGoTo }) {
+  const listItemButtonStyle = {
+    minHeight: 48,
+    justifyContent: open ? "initial" : "center",
+    px: 2.5,
   };
+
+  const listItemIconStyle = {
+    minWidth: 0,
+    mr: open ? 3 : "auto",
+    justifyContent: "center",
+  };
+
+  const listItemTextStyle = { opacity: open ? 1 : 0 };
 
   return (
     <Drawer variant="permanent" open={open}>
@@ -63,23 +73,22 @@ function CustomDrawer({ open, handleDrawerClose }) {
       <List>
         <ListItem key={"list"} disablePadding sx={{ display: "block" }}>
           <ListItemButton
-            sx={{
-              minHeight: 48,
-              justifyContent: open ? "initial" : "center",
-              px: 2.5,
-            }}
-            onClick={closeMenuAndGoToUserList}
+            sx={listItemButtonStyle}
+            onClick={() => closeDrawerAndGoTo("/home")}
           >
-            <ListItemIcon
-              sx={{
-                minWidth: 0,
-                mr: open ? 3 : "auto",
-                justifyContent: "center",
-              }}
-            >
+            <ListItemIcon sx={listItemIconStyle}>
+              <Home />
+            </ListItemIcon>
+            <ListItemText primary="Home" sx={listItemTextStyle} />
+          </ListItemButton>
+          <ListItemButton
+            sx={listItemButtonStyle}
+            onClick={() => closeDrawerAndGoTo("/users")}
+          >
+            <ListItemIcon sx={listItemIconStyle}>
               <ManageSearch />
             </ListItemIcon>
-            <ListItemText primary="List" sx={{ opacity: open ? 1 : 0 }} />
+            <ListItemText primary="List" sx={listItemTextStyle} />
           </ListItemButton>
         </ListItem>
       </List>
