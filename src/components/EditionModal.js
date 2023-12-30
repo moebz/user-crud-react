@@ -1,11 +1,14 @@
-import React from "react";
+import React, { useRef } from "react";
 import Box from "@mui/material/Box";
 import {
   Alert,
+  Card,
+  CardContent,
   Collapse,
   Dialog,
   DialogContent,
   DialogTitle,
+  Typography,
 } from "@mui/material";
 import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
@@ -14,8 +17,10 @@ import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
+import CheckIcon from "@mui/icons-material/Check";
 import { FileInput } from "./FileInput";
 import { ButtonWithLoader } from "./ButtonWithLoader";
+import { CurrentProfilePicture } from "./CurrentProfilePicture";
 
 function EditionModal({
   currentMilliseconds,
@@ -31,10 +36,43 @@ function EditionModal({
   editFormAlertMessage,
   editUser,
   isUserEditLoading,
+  cleanAndCloseEditionModal,
+  markForChange,
+  setMarkForChange,
+  markForDeletion,
+  setMarkForDeletion,
+  resetEditionImageInput,
 }) {
+  const openImageSelection = () => {
+    setMarkForDeletion(false);
+    setMarkForChange(true);
+    editionImageInputRef?.current?.click();
+  };
+
+  const currentImageUrl =
+    selectedUser?.avatar_url &&
+    `http://localhost:4000/${selectedUser.avatar_url}`;
+
+  let action = null;
+  if (selectedImageForEdition) {
+    action = (
+      <>
+        <CheckIcon fontSize="inherit" sx={{ mr: 1 }} />
+        The selected image will be uploaded
+      </>
+    );
+  } else if (markForDeletion) {
+    action = (
+      <>
+        <CheckIcon fontSize="inherit" sx={{ mr: 1 }} />
+        The current profile image will be deleted
+      </>
+    );
+  }
+
   return (
     <>
-      <Dialog open={isEditModalOpen} onClose={handleEditModalClose}>
+      <Dialog open={isEditModalOpen} onClose={cleanAndCloseEditionModal}>
         <DialogTitle>Edit user</DialogTitle>
         <DialogContent>
           {selectedUser && (
@@ -112,13 +150,57 @@ function EditionModal({
                 </Select>
               </FormControl>
 
-              <Box sx={{ mb: 2 }}>
-                <FileInput
-                  imageInputRef={editionImageInputRef}
-                  selectedImage={selectedImageForEdition}
-                  setSelectedImage={setSelectedImageForEdition}
-                />
-              </Box>
+              <Card sx={{ minWidth: 162, mb: 2 }} variant="outlined">
+                <CardContent>
+                  <Typography
+                    sx={{
+                      display: "flex",
+                      alignItems: "center",
+                      mb: 1,
+                    }}
+                    color="text.secondary"
+                  >
+                    Profile photo
+                  </Typography>
+
+                  {!markForChange && (
+                    <Box sx={{ mb: 2 }}>
+                      <CurrentProfilePicture
+                        currentImageUrl={currentImageUrl}
+                        markForDeletion={markForDeletion}
+                        setMarkForDeletion={setMarkForDeletion}
+                        openImageSelection={openImageSelection}
+                      />
+                    </Box>
+                  )}
+
+                  <Box
+                    sx={{ mb: 2, display: markForChange ? "block" : "none" }}
+                  >
+                    <FileInput
+                      imageInputRef={editionImageInputRef}
+                      selectedImage={selectedImageForEdition}
+                      setSelectedImage={setSelectedImageForEdition}
+                      setMarkForChange={setMarkForChange}
+                      openImageSelection={openImageSelection}
+                      reset={resetEditionImageInput}
+                    />
+                  </Box>
+
+                  <Typography
+                    sx={{
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      mb: 1,
+                      fontSize: 15,
+                    }}
+                    color="text.secondary"
+                  >
+                    {action}
+                  </Typography>
+                </CardContent>
+              </Card>
             </>
           )}
 

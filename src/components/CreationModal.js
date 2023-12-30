@@ -39,6 +39,7 @@ function CreationModal({
   selectedImage,
   setSelectedImage,
   isCreationFormAlertOpen,
+  setIsCreationFormAlertOpen,
   creationFormAlertMessage,
   createUser,
   isUserCreationLoading,
@@ -130,7 +131,7 @@ function CreationModal({
                   aria-label="close"
                   color="inherit"
                   size="small"
-                  onClick={cleanAndCloseCreationModal}
+                  onClick={() => setIsCreationFormAlertOpen(false)}
                 >
                   <CloseIcon fontSize="inherit" />
                 </IconButton>

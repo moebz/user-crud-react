@@ -22,6 +22,9 @@ function Users() {
   const [isSnackbarOpen, setIsSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
 
+  const [markForChange, setMarkForChange] = useState(false);
+  const [markForDeletion, setMarkForDeletion] = useState(false);
+
   const {
     users,
     filter,
@@ -96,11 +99,14 @@ function Users() {
   }
 
   function handleModalClose() {
+    setIsCreationFormAlertOpen(false);
+    setCreationFormAlertMessage("");
     setIsModalOpen(false);
   }
 
   function handleEditModalClose() {
     setIsEditFormAlertOpen(false);
+    setEditFormAlertMessage("");
     setIsEditModalOpen(false);
   }
 
@@ -112,10 +118,12 @@ function Users() {
   function showEditionForm(user) {
     console.log("showEditionForm.user", user);
     setSelectedUser(user);
+    setSelectedImageForEdition(null);
     setIsEditModalOpen(true);
   }
 
   function showCreationForm() {
+    setSelectedImage(null);
     setIsCreationModalOpen(true);
   }
 
@@ -123,9 +131,7 @@ function Users() {
     try {
       setIsUserDeletionLoading(true);
 
-      await sleep(3000);
-
-      const result = await api.delete(`/users/${selectedUser.id}`);
+      await api.delete(`/users/${selectedUser.id}`);
 
       await getUsersAndSetState({
         pageNumber: 1,
@@ -160,6 +166,11 @@ function Users() {
       const formData = new FormData();
 
       formData.append("avatar", selectedImageForEdition);
+
+      if (markForDeletion) {
+        formData.append("deleteavatar", "y");
+      }
+
       formData.append("firstname", selectedUser.firstname);
       formData.append("lastname", selectedUser.lastname);
       formData.append("email", selectedUser.email);
@@ -190,12 +201,31 @@ function Users() {
     } finally {
       setIsUserEditLoading(false);
       setIsSnackbarOpen(true);
+      cleanAndCloseEditionModal();
     }
   }
 
   function cleanAndCloseCreationModal() {
     setIsCreationFormAlertOpen(false);
+    setCreationFormAlertMessage("");
     setIsCreationModalOpen(false);
+  }
+
+  function cleanAndCloseEditionModal() {
+    setMarkForDeletion(false);
+    setMarkForChange(false);
+    setIsEditFormAlertOpen(false);
+    setEditFormAlertMessage("");
+    setIsEditModalOpen(false);
+  }
+
+  function resetEditionImageInput() {
+    if (editionImageInputRef?.current?.value) {
+      editionImageInputRef.current.value = "";
+    }
+
+    setSelectedImage(null);
+    setMarkForChange(false);
   }
 
   async function createUser() {
@@ -211,6 +241,10 @@ function Users() {
       formData.append("passwd_confirmation", password2);
       formData.append("username", username);
       formData.append("role", role);
+
+      // await sleep(1000);
+
+      // throw { response: { data: { message: "prueba" } } };
 
       const result = await api.post("/users/", formData, {
         headers: { "Content-Type": "multipart/form-data" },
@@ -286,6 +320,10 @@ function Users() {
 
   const totalNumberOfPages = Math.ceil(total / DEFAULT_PAGE_SIZE);
 
+  console.log({ isSnackbarOpen });
+  console.log("selectedImage", selectedImage);
+  console.log("selectedUser", selectedUser);
+
   return (
     <Container component="main" sx={{ marginTop: 2 }}>
       <Snackbar
@@ -310,6 +348,7 @@ function Users() {
         currentMilliseconds={currentMilliseconds}
         isEditModalOpen={isEditModalOpen}
         handleEditModalClose={handleEditModalClose}
+        cleanAndCloseEditionModal={cleanAndCloseEditionModal}
         selectedUser={selectedUser}
         setSelectedUser={setSelectedUser}
         editionImageInputRef={editionImageInputRef}
@@ -320,6 +359,11 @@ function Users() {
         editFormAlertMessage={editFormAlertMessage}
         editUser={editUser}
         isUserEditLoading={isUserEditLoading}
+        markForChange={markForChange}
+        setMarkForChange={setMarkForChange}
+        markForDeletion={markForDeletion}
+        setMarkForDeletion={setMarkForDeletion}
+        resetEditionImageInput={resetEditionImageInput}
       />
 
       <CreationModal
@@ -344,6 +388,7 @@ function Users() {
         selectedImage={selectedImage}
         setSelectedImage={setSelectedImage}
         isCreationFormAlertOpen={isCreationFormAlertOpen}
+        setIsCreationFormAlertOpen={setIsCreationFormAlertOpen}
         creationFormAlertMessage={creationFormAlertMessage}
         createUser={createUser}
         isUserCreationLoading={isUserCreationLoading}
