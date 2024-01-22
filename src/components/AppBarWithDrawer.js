@@ -10,6 +10,8 @@ function AppBarWithDrawer({
   currentUserData,
   setCurrentUserData,
 }) {
+  console.log("AppBarWithDrawer.currentUserData", currentUserData);
+
   const [open, setOpen] = useState(false);
 
   const logOut = () => {

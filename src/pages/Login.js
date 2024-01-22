@@ -52,7 +52,7 @@ function Login({ setCurrentUser, setCurrentUserData }) {
 
       console.log("userData", userData);
 
-      setCurrentUserData(userData.data.data[0]);
+      setCurrentUserData(userData.data.data);
 
       navigate("/home");
     } catch (error) {
