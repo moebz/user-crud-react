@@ -88,7 +88,12 @@ function Login({ setCurrentUser, setCurrentUserData }) {
         <LockOutlinedIcon />
       </Avatar>
 
-      <Typography component="h1" variant="h5" sx={styles.title}>
+      <Typography
+        data-testid="title"
+        component="h1"
+        variant="h5"
+        sx={styles.title}
+      >
         Sign in
       </Typography>
 
@@ -100,6 +105,7 @@ function Login({ setCurrentUser, setCurrentUserData }) {
 
       <Box component="form" onSubmit={handleSubmit} noValidate>
         <TextField
+          data-testid="username-input"
           margin="normal"
           required
           fullWidth
@@ -111,6 +117,7 @@ function Login({ setCurrentUser, setCurrentUserData }) {
         />
 
         <TextField
+          data-testid="password-input"
           margin="normal"
           required
           fullWidth
@@ -123,6 +130,7 @@ function Login({ setCurrentUser, setCurrentUserData }) {
         />
 
         <ButtonWithLoader
+          dataTestId="submit-input"
           type="submit"
           isLoading={loading}
           buttonText="Sign in"

@@ -10,6 +10,7 @@ function ButtonWithLoader({
   isLoading,
   disableWhenLoading = true,
   buttonText,
+  dataTestId,
 }) {
   return (
     <Box sx={{ position: "relative" }}>
@@ -19,6 +20,7 @@ function ButtonWithLoader({
         variant="contained"
         onClick={onButtonClick}
         disabled={disableWhenLoading ? isLoading : false}
+        data-testid={dataTestId}
       >
         {buttonText}
       </Button>

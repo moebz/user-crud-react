@@ -142,7 +142,9 @@ function ResponsiveAppBar({
 
             {currentUser?.decodedToken && (
               <MenuItem key="logout" onClick={logOut}>
-                <Typography textAlign="center">Log out</Typography>
+                <Typography textAlign="center" data-testid="logout-button">
+                  Log out
+                </Typography>
               </MenuItem>
             )}
 
