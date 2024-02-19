@@ -46,7 +46,11 @@ function CreationModal({
 }) {
   return (
     <>
-      <Dialog open={isCreationModalOpen} onClose={cleanAndCloseCreationModal}>
+      <Dialog
+        open={isCreationModalOpen}
+        onClose={cleanAndCloseCreationModal}
+        data-testid="creation-modal"
+      >
         <DialogTitle>New user</DialogTitle>
         <DialogContent>
           <TextField
@@ -55,6 +59,7 @@ function CreationModal({
             margin="normal"
             fullWidth
             label="First name"
+            data-testid="firstname-input"
           />
 
           <TextField
@@ -63,6 +68,7 @@ function CreationModal({
             margin="normal"
             fullWidth
             label="Last name"
+            data-testid="lastname-input"
           />
 
           <TextField
@@ -71,6 +77,7 @@ function CreationModal({
             margin="normal"
             fullWidth
             label="Email"
+            data-testid="email-input"
           />
 
           <TextField
@@ -81,6 +88,7 @@ function CreationModal({
             required
             fullWidth
             label="Username"
+            data-testid="username-input"
           />
 
           <TextField
@@ -91,6 +99,7 @@ function CreationModal({
             fullWidth
             label="New password"
             type="password"
+            data-testid="password1-input"
           />
 
           <TextField
@@ -101,6 +110,7 @@ function CreationModal({
             label="Password confirmation"
             type="password"
             autoComplete={currentMilliseconds}
+            data-testid="password2-input"
           />
 
           <FormControl fullWidth margin="normal" sx={{ mb: 3 }}>
@@ -111,6 +121,7 @@ function CreationModal({
               value={role}
               label="Role"
               onChange={handleRoleChange}
+              data-testid="select-role-input"
             >
               <MenuItem value={"standard"}>Standard</MenuItem>
               <MenuItem value={"admin"}>Administrator</MenuItem>
@@ -137,6 +148,7 @@ function CreationModal({
                 </IconButton>
               }
               sx={{ mb: 2 }}
+              data-testid="creation-form-alert"
             >
               {creationFormAlertMessage}
             </Alert>
@@ -152,6 +164,7 @@ function CreationModal({
               onButtonClick={createUser}
               isLoading={isUserCreationLoading}
               buttonText="Add"
+              dataTestId="submit-user-button"
             />
           </Box>
         </DialogContent>

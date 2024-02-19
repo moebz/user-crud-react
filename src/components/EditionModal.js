@@ -72,7 +72,11 @@ function EditionModal({
 
   return (
     <>
-      <Dialog open={isEditModalOpen} onClose={cleanAndCloseEditionModal}>
+      <Dialog
+        open={isEditModalOpen}
+        onClose={cleanAndCloseEditionModal}
+        data-testid="edition-modal"
+      >
         <DialogTitle>Edit user</DialogTitle>
         <DialogContent>
           {selectedUser && (
@@ -88,6 +92,7 @@ function EditionModal({
                     firstname: event.target.value,
                   })
                 }
+                data-testid="firstname-input"
               />
 
               <TextField
@@ -101,6 +106,7 @@ function EditionModal({
                     lastname: event.target.value,
                   })
                 }
+                data-testid="lastname-input"
               />
 
               <TextField
@@ -116,6 +122,9 @@ function EditionModal({
                     username: event.target.value,
                   })
                 }
+                data-testid="username-input"
+
+
               />
 
               <TextField
@@ -129,6 +138,7 @@ function EditionModal({
                     email: event.target.value,
                   })
                 }
+                data-testid="email-input"
               />
 
               <FormControl fullWidth margin="normal">
@@ -220,6 +230,7 @@ function EditionModal({
                 </IconButton>
               }
               sx={{ mb: 2 }}
+              data-testid="edition-form-alert"
             >
               {editFormAlertMessage}
             </Alert>
@@ -234,6 +245,7 @@ function EditionModal({
             <ButtonWithLoader
               onButtonClick={editUser}
               isLoading={isUserEditLoading}
+              dataTestId="submit-user-edition-button"
               buttonText="Save changes"
             />
           </Box>

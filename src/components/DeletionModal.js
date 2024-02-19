@@ -22,10 +22,14 @@ function DeletionModal({
 }) {
   return (
     <>
-      <Dialog open={isModalOpen} onClose={handleModalClose}>
+      <Dialog
+        data-testid="deletion-modal"
+        open={isModalOpen}
+        onClose={handleModalClose}
+      >
         <DialogTitle>Delete user</DialogTitle>
         <DialogContent>
-          <DialogContentText sx={{mb:2}}>
+          <DialogContentText sx={{ mb: 2 }}>
             Are you sure you want to delete this user?
           </DialogContentText>
 
@@ -54,6 +58,7 @@ function DeletionModal({
             onButtonClick={deleteUser}
             isLoading={isUserDeletionLoading}
             buttonText="Delete"
+            dataTestId="submit-user-deletion-button"
           />
         </DialogContent>
       </Dialog>

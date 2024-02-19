@@ -25,6 +25,7 @@ function Filter({
         value={filter}
         sx={{ minWidth: 210, maxWidth: 400 }}
         fullWidth
+        data-testid="filter-input"
       />
 
       <Stack
@@ -37,6 +38,7 @@ function Filter({
           variant="contained"
           onClick={handleApplyFilter}
           sx={{ mr: 1 }}
+          data-testid="apply-filter-button"
         >
           Apply
         </Button>

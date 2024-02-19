@@ -88,13 +88,13 @@ function UsersTable({
       )}
 
       {users.status === "DONE" && !users?.data?.length && (
-        <Alert severity="info">No users to show</Alert>
+        <Alert data-testid="no-users-alert" severity="info">No users to show</Alert>
       )}
 
       {users.status === "DONE" && !!users?.data?.length && (
         <Box sx={{ overflow: "auto" }}>
           <Box sx={{ width: "100%", display: "table", tableLayout: "fixed" }}>
-            <Table size="small">
+            <Table size="small" data-testid="users-table">
               <TableHead>
                 <TableRow>
                   {headCells.map((headCell) => (
@@ -143,6 +143,7 @@ function UsersTable({
                           fullWidth
                           variant="text"
                           onClick={() => showEditionForm(row)}
+                          data-testid="edit-user-button"
                         >
                           Edit
                         </Button>
@@ -150,6 +151,7 @@ function UsersTable({
                           fullWidth
                           variant="text"
                           onClick={() => askForDeletionConfirmation(row)}
+                          data-testid="delete-user-button"
                         >
                           Delete
                         </Button>

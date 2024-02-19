@@ -191,6 +191,7 @@ function Users() {
 
       setIsEditModalOpen(false);
       setSnackbarMessage("User modified successfully");
+      cleanAndCloseEditionModal();
     } catch (error) {
       console.error(error);
       setSnackbarMessage("There was an error modifying the user");
@@ -201,7 +202,6 @@ function Users() {
     } finally {
       setIsUserEditLoading(false);
       setIsSnackbarOpen(true);
-      cleanAndCloseEditionModal();
     }
   }
 
@@ -332,6 +332,7 @@ function Users() {
         onClose={handleSnackbarClose}
         message={snackbarMessage}
         action={action}
+        data-testid="snackbar"
       />
 
       <DeletionModal
@@ -407,6 +408,7 @@ function Users() {
           variant="contained"
           sx={{ mb: 3 }}
           onClick={showCreationForm}
+          data-testid="create-user-button"
         >
           Add new user
         </Button>
