@@ -4,30 +4,19 @@ import api from "./api";
 
 import { history } from "./history";
 
-const login = async (username, passwd, setCurrentUser) => {
+const login = async (username, passwd) => {
   const response = await api.post("/login", {
     username,
     passwd,
   });
 
-  console.log("login.response.data", response.data);
-
   if (!response?.data?.data?.accessToken) {
-    console.log("login.notSettingInLocalStorage");
     throw new Error("Login didn't return necessary data");
   }
 
-  console.log("login.setInLocalStorage");
-
   const userDataToSet = response.data.data;
 
-  // Store in localStorage
-
-  setUser(userDataToSet);
-
-  // Set in App state
-
-  setCurrentUser(userDataToSet);
+  return userDataToSet;
 };
 
 const logout = () => {
@@ -59,14 +48,9 @@ const getUser = () => {
 };
 
 const setUser = (user) => {
-  console.log("setUser.originalUserData", JSON.stringify(user));
-
   const decodedToken = jwtDecode(user.accessToken);
-  console.log("decodedToken", decodedToken);
 
   user.decodedToken = decodedToken;
-
-  console.log("setUser.modifiedUserData", JSON.stringify(user));
 
   localStorage.setItem("user", JSON.stringify(user));
 };

@@ -40,17 +40,26 @@ function Login({ setCurrentUser, setCurrentUserData }) {
 
       const data = new FormData(event.currentTarget);
 
-      await authService.login(
+      const loginData = await authService.login(
         data.get("username"),
-        data.get("password"),
-        setCurrentUser
+        data.get("password")
       );
+
+      // Store login data in localStorage.
+
+      authService.setUser(loginData);
+
+      // Store login data in App state.
+
+      setCurrentUser(loginData);
+
+      // Get additional user data.
 
       const currentUser = authService.getCurrentUser();
 
       const userData = await api.get(`/users/${currentUser.decodedToken.id}`);
 
-      console.log("userData", userData);
+      // Store in App state and navigate home.
 
       setCurrentUserData(userData.data.data);
 
@@ -62,10 +71,6 @@ function Login({ setCurrentUser, setCurrentUserData }) {
           error.response.data.message) ||
         error.message ||
         error.toString();
-
-      console.log({
-        resMessage,
-      });
 
       setAlertMessage(resMessage);
       openAlert();

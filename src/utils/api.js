@@ -22,7 +22,7 @@ const responseErrorInterceptor = async (err) => {
     return Promise.reject(err);
   }
 
-  console.log("originalConfig", originalConfig);
+  // console.log("originalConfig", originalConfig);
 
   if (
     originalConfig.url === "/login" ||
