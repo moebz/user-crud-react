@@ -1,12 +1,5 @@
 import React from "react";
-import {
-  render,
-  screen,
-  fireEvent,
-  waitFor,
-  act,
-  findByTestId,
-} from "@testing-library/react";
+import { render, screen, waitFor, act } from "@testing-library/react";
 import { Users } from "./Users";
 
 import { server } from "./../../msw/mocks";
@@ -57,6 +50,8 @@ describe("Users component", () => {
   });
 
   it("submits the form when the 'Save' button is clicked", async () => {
+    // Arrange.
+
     server.use(
       rest.post("http://localhost:4000/users", (req, res, ctx) =>
         res(
@@ -65,11 +60,10 @@ describe("Users component", () => {
             message: "User added with ID: 1153",
           })
         )
-      ),
-      rest.get("http://localhost:4000/users*", (req, res, ctx) =>
-        res(ctx.json(userListResponse))
       )
     );
+
+    // Act.
 
     await act(async () => {
       render(<Users />);
@@ -113,10 +107,62 @@ describe("Users component", () => {
       await userEvent.click(submitUserButton);
     });
 
+    // Assert.
+
+    // After a successful submission, the modal should be closed
+    // and there should be no alert visible.
+
     const creationFormAlert = await screen.findByTestId("creation-form-alert");
 
     expect(creationFormAlert).not.toBeVisible();
 
     await waitFor(() => expect(creationModalElement).not.toBeVisible());
+  });
+
+  it("shows an error message when the form is submitted with incomplete input", async () => {
+    // Arrange.
+
+    server.use(
+      rest.post("http://localhost:4000/users", (req, res, ctx) =>
+        res(
+          ctx.status(httpStatus.BAD_REQUEST),
+          ctx.json({
+            message:
+              'Validation errors: "First name" is not allowed to be empty. "Last name" is not allowed to be empty. "Email" is not allowed to be empty. "Username" is not allowed to be empty. "Password" is not allowed to be empty. ',
+          })
+        )
+      )
+    );
+
+    // Act.
+
+    await act(async () => {
+      render(<Users />);
+    });
+
+    await act(async () => {
+      const addUserButton = await screen.findByTestId("create-user-button");
+      await userEvent.click(addUserButton);
+    });
+
+    const creationModalElement = await screen.findByTestId("creation-modal");
+
+    const submitUserButton = await screen.findByTestId("submit-user-button");
+
+    // Submit the form without filling any input.
+
+    await act(async () => {
+      await userEvent.click(submitUserButton);
+    });
+
+    // Assert.
+
+    // An alert should be shown and the modal should still be visible.
+
+    const creationFormAlert = await screen.findByTestId("creation-form-alert");
+
+    expect(creationFormAlert).toBeVisible();
+
+    await waitFor(() => expect(creationModalElement).toBeVisible());
   });
 });
