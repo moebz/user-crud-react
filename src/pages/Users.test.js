@@ -18,6 +18,14 @@ import userEvent from "@testing-library/user-event";
 import { getCurrentMilliseconds } from "../utils/utils";
 
 describe("Users component", () => {
+  beforeEach(() => {
+    server.use(
+      rest.get("http://localhost:4000/users*", (req, res, ctx) =>
+        res(ctx.json(userListResponse))
+      )
+    );
+  });
+
   it("renders the title", async () => {
     await act(async () => {
       render(<Users />);
