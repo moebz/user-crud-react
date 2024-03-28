@@ -14,7 +14,7 @@ import { rest } from "msw";
 import httpStatus from "http-status";
 
 describe("Login component", () => {
-  it("Shows a 'sign in' title", async () => {
+  it("shows a 'sign in' title", async () => {
     // Act.
 
     render(
@@ -30,7 +30,7 @@ describe("Login component", () => {
     expect(titleElement).toHaveTextContent(/sign in/i);
   });
 
-  it("Stores user data after a successful login", async () => {
+  it("stores user data after a successful login", async () => {
     // Arrange.
 
     server.use(
@@ -94,7 +94,7 @@ describe("Login component", () => {
     expect(setCurrentUserData).toHaveBeenCalledTimes(1);
   });
 
-  it("Doesn't store user data after a failed login attempt", async () => {
+  it("doesn't store user data after a failed login attempt", async () => {
     // Arrange.
 
     const wrongLoginResponse = {
