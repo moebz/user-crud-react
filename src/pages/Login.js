@@ -38,7 +38,11 @@ function Login({ setCurrentUser, setCurrentUserData }) {
     try {
       setLoading(true);
 
+      // Get the form data.
+
       const data = new FormData(event.currentTarget);
+
+      // Try to login.
 
       const loginData = await authService.login(
         data.get("username"),
@@ -65,8 +69,6 @@ function Login({ setCurrentUser, setCurrentUserData }) {
 
       navigate("/home");
     } catch (error) {
-      console.log("error", error);
-
       const resMessage =
         (error.response &&
           error.response.data &&
@@ -139,6 +141,7 @@ function Login({ setCurrentUser, setCurrentUserData }) {
 
         <ButtonWithLoader
           dataTestId="submit-input"
+          loaderDataTestId="submit-loader"
           type="submit"
           isLoading={loading}
           buttonText="Sign in"

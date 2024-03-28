@@ -11,6 +11,7 @@ function ButtonWithLoader({
   disableWhenLoading = true,
   buttonText,
   dataTestId,
+  loaderDataTestId,
 }) {
   return (
     <Box sx={{ position: "relative" }}>
@@ -26,6 +27,7 @@ function ButtonWithLoader({
       </Button>
       {isLoading && (
         <CircularProgress
+          data-testid={loaderDataTestId}
           size={24}
           sx={{
             color: green[500],

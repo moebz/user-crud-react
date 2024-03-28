@@ -1,4 +1,10 @@
-import { render, screen, act } from "@testing-library/react";
+import {
+  render,
+  screen,
+  act,
+  waitFor,
+  getByTestId,
+} from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { BrowserRouter as Router } from "react-router-dom";
 import { Login } from "./Login";
@@ -39,7 +45,7 @@ test("Successful login", async () => {
         })
       )
     ),
-    rest.get("http://localhost:4000/users/*", (req, res, ctx) =>
+    rest.get("http://localhost:4000/users*", (req, res, ctx) =>
       res(
         ctx.json({
           data: {
@@ -113,6 +119,8 @@ test("Wrong login", async () => {
       />
     </Router>
   );
+
+  // Act.
 
   const usernameInput = screen.getByTestId("username-input");
   const passwordInput = screen.getByTestId("password-input");
