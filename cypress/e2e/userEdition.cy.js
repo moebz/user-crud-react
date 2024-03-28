@@ -10,7 +10,7 @@ describe("User edition", () => {
     cy.getByTestId("logout-button").should("exist");
   });
 
-  it("Creates an user", () => {
+  it("Edits a user", () => {
     // Go to the users page.
 
     cy.visit("/users");

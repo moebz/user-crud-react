@@ -49,6 +49,7 @@ function DeletionModal({
                 </IconButton>
               }
               sx={{ mb: 2 }}
+              data-testid="deletion-form-alert"
             >
               {deletionFormAlertMessage}
             </Alert>
