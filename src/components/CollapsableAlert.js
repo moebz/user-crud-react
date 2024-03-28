@@ -3,6 +3,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import React from "react";
 
 function CollapsableAlert({
+  dataTestId,
   isAlertOpen,
   closeAlert,
   alertMessage,
@@ -11,6 +12,7 @@ function CollapsableAlert({
   return (
     <Collapse in={isAlertOpen}>
       <Alert
+        data-testid={dataTestId}
         severity={severity}
         action={
           <IconButton

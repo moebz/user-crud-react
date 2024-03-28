@@ -5,6 +5,7 @@ import { Login } from "./Login";
 
 import { server } from "./../../msw/mocks";
 import { rest } from "msw";
+import httpStatus from "http-status";
 
 test("Title with 'sign in' text is present", async () => {
   // Act.
@@ -84,4 +85,52 @@ test("Successful login", async () => {
 
   expect(setCurrentUser).toHaveBeenCalledTimes(1);
   expect(setCurrentUserData).toHaveBeenCalledTimes(1);
+});
+
+test("Wrong login", async () => {
+  // Arrange.
+
+  const wrongLoginResponse = {
+    message: "Username or password not valid",
+  };
+
+  // Return a 400 status code with the wrong login response.
+
+  server.use(
+    rest.post("http://localhost:4000/login", (req, res, ctx) =>
+      res(ctx.status(httpStatus.BAD_REQUEST), ctx.json(wrongLoginResponse))
+    )
+  );
+
+  const setCurrentUser = jest.fn();
+  const setCurrentUserData = jest.fn();
+
+  render(
+    <Router>
+      <Login
+        setCurrentUser={setCurrentUser}
+        setCurrentUserData={setCurrentUserData}
+      />
+    </Router>
+  );
+
+  const usernameInput = screen.getByTestId("username-input");
+  const passwordInput = screen.getByTestId("password-input");
+  const signInButton = screen.getByTestId("submit-input");
+
+  await act(async () => {
+    await userEvent.type(usernameInput, "testuser");
+    await userEvent.type(passwordInput, "testpassword");
+
+    await userEvent.click(signInButton);
+  });
+
+  // Assert.
+
+  expect(setCurrentUser).toHaveBeenCalledTimes(0);
+  expect(setCurrentUserData).toHaveBeenCalledTimes(0);
+
+  const alertElement = await screen.findByTestId("alert");
+
+  expect(alertElement).toHaveTextContent(wrongLoginResponse.message);
 });

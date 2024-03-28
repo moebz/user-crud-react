@@ -65,6 +65,8 @@ function Login({ setCurrentUser, setCurrentUserData }) {
 
       navigate("/home");
     } catch (error) {
+      console.log("error", error);
+
       const resMessage =
         (error.response &&
           error.response.data &&
@@ -103,6 +105,7 @@ function Login({ setCurrentUser, setCurrentUserData }) {
       </Typography>
 
       <CollapsableAlert
+        dataTestId="alert"
         isAlertOpen={isAlertOpen}
         closeAlert={closeAlert}
         alertMessage={alertMessage}
