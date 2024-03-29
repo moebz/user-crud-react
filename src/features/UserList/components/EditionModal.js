@@ -35,10 +35,12 @@ function EditionModal({
   setIsEditModalOpen,
   selectedImageForEdition,
   setSelectedImageForEdition,
+  selectedUser,
+  setSelectedUser,
 }) {
+  const editionImageInputRef = useRef();
+
   const {
-    selectedUser,
-    setSelectedUser,
     isUserEditLoading,
     isEditFormAlertOpen,
     setIsEditFormAlertOpen,
@@ -61,9 +63,9 @@ function EditionModal({
     setIsEditModalOpen,
     selectedImageForEdition,
     setSelectedImageForEdition,
+    selectedUser,
+    setSelectedUser,
   });
-
-  const editionImageInputRef = React.useRef();
 
   const openImageSelection = () => {
     setMarkForDeletion(false);

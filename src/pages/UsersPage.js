@@ -9,12 +9,11 @@ import CloseIcon from "@mui/icons-material/Close";
 import { Grid } from "@mui/material";
 
 import { getCurrentMilliseconds } from "../utils/utils";
-import { UsersTable } from "../components/UsersTable";
 import { DeletionModal } from "../features/UserList/components/DeletionModal";
 import { CreationModal } from "../features/UserList/components/CreationModal";
 import { EditionModal } from "../features/UserList/components/EditionModal";
-import { Filter } from "../components/Filter";
 import { useUsersList } from "../features/UserList/components/UserList.hooks";
+import { UserList } from "../features/UserList/components/UserList";
 
 function UsersPage() {
   const currentMilliseconds = getCurrentMilliseconds();
@@ -117,6 +116,8 @@ function UsersPage() {
         setIsEditModalOpen={setIsEditModalOpen}
         selectedImageForEdition={selectedImageForEdition}
         setSelectedImageForEdition={setSelectedImageForEdition}
+        selectedUser={selectedUser}
+        setSelectedUser={setSelectedUser}
       />
 
       <DeletionModal
@@ -150,15 +151,12 @@ function UsersPage() {
         </Button>
       </Grid>
 
-      <Filter
+      <UserList
         setFilter={setFilter}
         currentMilliseconds={currentMilliseconds}
         filter={filter}
         handleApplyFilter={handleApplyFilter}
         clearFilter={clearFilter}
-      />
-
-      <UsersTable
         users={users}
         currentPage={currentPage}
         handlePageChange={handlePageChange}

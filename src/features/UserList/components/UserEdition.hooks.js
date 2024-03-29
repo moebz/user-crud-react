@@ -13,8 +13,9 @@ export const useUsersEdition = ({
   setIsEditModalOpen,
   selectedImageForEdition,
   setSelectedImageForEdition,
+  selectedUser,
+  setSelectedUser,
 }) => {
-  const [selectedUser, setSelectedUser] = useState(null);
   const [isUserEditLoading, setIsUserEditLoading] = useState(false);
   const [isEditFormAlertOpen, setIsEditFormAlertOpen] = useState(false);
   const [editFormAlertMessage, setEditFormAlertMessage] = useState("");
@@ -86,8 +87,6 @@ export const useUsersEdition = ({
   }
 
   return {
-    selectedUser,
-    setSelectedUser,
     isUserEditLoading,
     isEditFormAlertOpen,
     setIsEditFormAlertOpen,
