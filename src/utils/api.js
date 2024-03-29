@@ -22,8 +22,6 @@ const responseErrorInterceptor = async (err) => {
     return Promise.reject(err);
   }
 
-  // console.log("originalConfig", originalConfig);
-
   if (
     originalConfig.url === "/login" ||
     !err?.response ||
@@ -38,7 +36,6 @@ const responseErrorInterceptor = async (err) => {
     // returned an "unauthorized" error. We should redirect the
     // user to the login page.
 
-    console.log("retryIsTrue.logout");
     authService.logoutAndRedirectToLogin();
     return;
   }
@@ -58,8 +55,6 @@ const responseErrorInterceptor = async (err) => {
 
     return instance(originalConfig);
   } catch (refreshAndRetryError) {
-    console.log("refreshFailed.error", refreshAndRetryError);
-    console.log("refreshFailed.logout");
     authService.logoutAndRedirectToLogin();
   }
 };

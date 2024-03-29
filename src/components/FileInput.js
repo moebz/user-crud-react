@@ -18,11 +18,6 @@ function FileInput({
   openImageSelection,
   reset,
 }) {
-  console.log({
-    "FileInput.imageInputRef": imageInputRef,
-    "FileInput.selectedImage": selectedImage,
-  });
-
   const [preview, setPreview] = useState("");
 
   // create a preview as a side effect, whenever selected file is changed

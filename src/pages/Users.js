@@ -116,7 +116,6 @@ function Users() {
   }
 
   function showEditionForm(user) {
-    console.log("showEditionForm.user", user);
     setSelectedUser(user);
     setSelectedImageForEdition(null);
     setIsEditModalOpen(true);
@@ -250,7 +249,6 @@ function Users() {
         headers: { "Content-Type": "multipart/form-data" },
       });
 
-      console.log("createUser.result", result);
 
       await getUsersAndSetState({
         pageNumber: 1,
@@ -319,10 +317,6 @@ function Users() {
   );
 
   const totalNumberOfPages = Math.ceil(total / DEFAULT_PAGE_SIZE);
-
-  console.log({ isSnackbarOpen });
-  console.log("selectedImage", selectedImage);
-  console.log("selectedUser", selectedUser);
 
   return (
     <Container component="main" sx={{ marginTop: 2 }}>

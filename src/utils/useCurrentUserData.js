@@ -8,13 +8,11 @@ function useCurrentUserData() {
 
   const requestUserDataAndSaveItInState = async (user) => {
     const userData = await api.get(`/users/${user.decodedToken.id}`);
-    console.log("userData", userData);
     setCurrentUserData(userData.data.data[0]);
   };
 
   useEffect(() => {
     const user = authService.getCurrentUser();
-    console.log("App.useEffect.user", user);
     if (user) {
       setCurrentUser(user);
 

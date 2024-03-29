@@ -25,9 +25,6 @@ function App() {
   const { currentUser, setCurrentUser, currentUserData, setCurrentUserData } =
     useCurrentUserData();
 
-  console.log("App.render.currentUser", currentUser);
-  console.log("App.render.currentUserData", currentUserData);
-
   return (
     <>
       <CssBaseline />

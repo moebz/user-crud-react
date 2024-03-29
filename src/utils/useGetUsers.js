@@ -23,7 +23,6 @@ function useGetUsers({ setSnackbarMessage, setIsSnackbarOpen }) {
       const result = await api.get("/users", {
         params,
       });
-      console.log("getUsersAndSetState.result.data", result.data);
 
       if (result.data.data.rows) {
         setUsers({ data: result.data.data.rows, status: "DONE" });

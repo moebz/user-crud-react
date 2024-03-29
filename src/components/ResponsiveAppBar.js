@@ -20,8 +20,6 @@ function ResponsiveAppBar({
   logOut,
   closeDrawerAndGoTo,
 }) {
-  console.log("ResponsiveAppBar.currentUserData", currentUserData);
-
   const [anchorElUser, setAnchorElUser] = useState(null);
 
   const handleOpenUserMenu = (event) => {
