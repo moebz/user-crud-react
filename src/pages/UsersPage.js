@@ -1,51 +1,41 @@
-import React, { useState } from "react";
+import React from "react";
 
-import Button from "@mui/material/Button";
 import Container from "@mui/material/Container";
-import Title from "../components/Title";
 import Snackbar from "@mui/material/Snackbar";
 import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
-import { Grid } from "@mui/material";
 
-import { getCurrentMilliseconds } from "../utils/utils";
 import { DeletionModal } from "../features/UserList/components/DeletionModal";
 import { CreationModal } from "../features/UserList/components/CreationModal";
 import { EditionModal } from "../features/UserList/components/EditionModal";
 import { useUsersList } from "../features/UserList/components/UserList.hooks";
 import { UserList } from "../features/UserList/components/UserList";
+import { useUsersPage } from "../features/UserList/components/UsersPage.hooks";
+import { TitleLine } from "../features/UserList/components/TitleLine";
 
 function UsersPage() {
-  const currentMilliseconds = getCurrentMilliseconds();
-
-  const [isSnackbarOpen, setIsSnackbarOpen] = useState(false);
-  const [snackbarMessage, setSnackbarMessage] = useState("");
-
-  const [isCreationModalOpen, setIsCreationModalOpen] = useState(false);
-  const [selectedImage, setSelectedImage] = useState(null);
-
-  function showCreationForm() {
-    setSelectedImage(null);
-    setIsCreationModalOpen(true);
-  }
-
-  const [selectedUser, setSelectedUser] = useState(null);
-
-  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-  const [selectedImageForEdition, setSelectedImageForEdition] = useState(null);
-
-  function showEditionForm(user) {
-    setSelectedUser(user);
-    setSelectedImageForEdition(null);
-    setIsEditModalOpen(true);
-  }
-
-  const [isDeletionModalOpen, setIsDeletionModalOpen] = useState(false);
-
-  function askForDeletionConfirmation(user) {
-    setSelectedUser(user);
-    setIsDeletionModalOpen(true);
-  }
+  const {
+    currentMilliseconds,
+    isSnackbarOpen,
+    snackbarMessage,
+    setSnackbarMessage,
+    handleSnackbarClose,
+    isCreationModalOpen,
+    selectedImage,
+    showCreationForm,
+    selectedUser,
+    isEditModalOpen,
+    selectedImageForEdition,
+    showEditionForm,
+    isDeletionModalOpen,
+    askForDeletionConfirmation,
+    setIsSnackbarOpen,
+    setIsCreationModalOpen,
+    setIsEditModalOpen,
+    setSelectedImageForEdition,
+    setSelectedUser,
+    setIsDeletionModalOpen,
+  } = useUsersPage();
 
   const {
     users,
@@ -61,10 +51,6 @@ function UsersPage() {
     createSortHandler,
     totalNumberOfPages,
   } = useUsersList({ setIsSnackbarOpen, setSnackbarMessage });
-
-  function handleSnackbarClose() {
-    setIsSnackbarOpen(false);
-  }
 
   const action = (
     <React.Fragment>
@@ -132,24 +118,7 @@ function UsersPage() {
         selectedUser={selectedUser}
       />
 
-      <Grid
-        container
-        direction={{ xs: "column", sm: "row" }}
-        justifyContent="space-between"
-        alignItems="center"
-      >
-        <Title>User list</Title>
-
-        <Button
-          type="submit"
-          variant="contained"
-          sx={{ mb: 3 }}
-          onClick={showCreationForm}
-          data-testid="create-user-button"
-        >
-          Add new user
-        </Button>
-      </Grid>
+      <TitleLine showCreationForm={showCreationForm} />
 
       <UserList
         setFilter={setFilter}
