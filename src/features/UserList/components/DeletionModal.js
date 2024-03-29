@@ -10,22 +10,42 @@ import {
 import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
 import { ButtonWithLoader } from "../../../components/ButtonWithLoader";
+import { useUsersDeletion } from "./UserDeletion.hooks";
 
 function DeletionModal({
-  isModalOpen,
-  handleModalClose,
-  isDeletionFormAlertOpen,
-  setIsDeletionFormAlertOpen,
-  deletionFormAlertMessage,
-  deleteUser,
-  isUserDeletionLoading,
+  isDeletionModalOpen,
+  getUsersAndSetState,
+  filter,
+  orderBy,
+  order,
+  setSnackbarMessage,
+  setIsSnackbarOpen,
+  setIsDeletionModalOpen,
+  selectedUser,
 }) {
+  const {
+    isUserDeletionLoading,
+    isDeletionFormAlertOpen,
+    setIsDeletionFormAlertOpen,
+    deletionFormAlertMessage,
+    deleteUser,
+  } = useUsersDeletion({
+    getUsersAndSetState,
+    filter,
+    orderBy,
+    order,
+    setSnackbarMessage,
+    setIsSnackbarOpen,
+    setIsDeletionModalOpen,
+    selectedUser,
+  });
+
   return (
     <>
       <Dialog
         data-testid="deletion-modal"
-        open={isModalOpen}
-        onClose={handleModalClose}
+        open={isDeletionModalOpen}
+        onClose={() => setIsDeletionModalOpen(false)}
       >
         <DialogTitle>Delete user</DialogTitle>
         <DialogContent>
@@ -60,6 +80,7 @@ function DeletionModal({
             isLoading={isUserDeletionLoading}
             buttonText="Delete"
             dataTestId="submit-user-deletion-button"
+            loaderDataTestId="submit-user-deletion-button-loader"
           />
         </DialogContent>
       </Dialog>

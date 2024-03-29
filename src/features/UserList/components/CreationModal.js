@@ -29,6 +29,7 @@ function CreationModal({
   setIsCreationModalOpen,
   selectedImage,
   isCreationModalOpen,
+  setIsModalOpen,
 }) {
   const imageInputRef = React.useRef();
 
@@ -63,6 +64,7 @@ function CreationModal({
     setIsSnackbarOpen,
     setIsCreationModalOpen,
     selectedImage,
+    setIsModalOpen,
   });
 
   return (

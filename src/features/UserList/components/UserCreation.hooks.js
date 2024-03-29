@@ -11,9 +11,8 @@ export const useUserCreation = ({
   setIsSnackbarOpen,
   setIsCreationModalOpen,
   selectedImage,
+  setIsModalOpen,
 }) => {
-  const [isModalOpen, setIsModalOpen] = useState(false);
-
   const [isUserCreationLoading, setIsUserCreationLoading] = useState(false);
   const [isCreationFormAlertOpen, setIsCreationFormAlertOpen] = useState(false);
   const [creationFormAlertMessage, setCreationFormAlertMessage] = useState("");
@@ -92,7 +91,6 @@ export const useUserCreation = ({
   }
 
   return {
-    isModalOpen,
     isUserCreationLoading,
     isCreationFormAlertOpen,
     setIsCreationFormAlertOpen,

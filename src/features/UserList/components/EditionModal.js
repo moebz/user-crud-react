@@ -21,28 +21,47 @@ import CheckIcon from "@mui/icons-material/Check";
 import { FileInput } from "../../../components/FileInput";
 import { ButtonWithLoader } from "../../../components/ButtonWithLoader";
 import { CurrentProfilePicture } from "../../../components/CurrentProfilePicture";
+import { useUsersEdition } from "./UserEdition.hooks";
 
 function EditionModal({
   currentMilliseconds,
   isEditModalOpen,
-  handleEditModalClose,
-  selectedUser,
-  setSelectedUser,
+  getUsersAndSetState,
+  filter,
+  orderBy,
+  order,
+  setSnackbarMessage,
+  setIsSnackbarOpen,
   editionImageInputRef,
-  selectedImageForEdition,
-  setSelectedImageForEdition,
-  isEditFormAlertOpen,
-  setIsEditFormAlertOpen,
-  editFormAlertMessage,
-  editUser,
-  isUserEditLoading,
-  cleanAndCloseEditionModal,
-  markForChange,
-  setMarkForChange,
-  markForDeletion,
-  setMarkForDeletion,
-  resetEditionImageInput,
+  setIsEditModalOpen,
 }) {
+  const {
+    selectedUser,
+    setSelectedUser,
+    isUserEditLoading,
+    isEditFormAlertOpen,
+    setIsEditFormAlertOpen,
+    editFormAlertMessage,
+    selectedImageForEdition,
+    setSelectedImageForEdition,
+    markForChange,
+    setMarkForChange,
+    markForDeletion,
+    setMarkForDeletion,
+    editUser,
+    resetEditionImageInput,
+    cleanAndCloseEditionModal,
+  } = useUsersEdition({
+    getUsersAndSetState,
+    filter,
+    orderBy,
+    order,
+    setSnackbarMessage,
+    setIsSnackbarOpen,
+    editionImageInputRef,
+    setIsEditModalOpen,
+  });
+
   const openImageSelection = () => {
     setMarkForDeletion(false);
     setMarkForChange(true);
@@ -123,8 +142,6 @@ function EditionModal({
                   })
                 }
                 data-testid="username-input"
-
-
               />
 
               <TextField
@@ -247,6 +264,7 @@ function EditionModal({
               isLoading={isUserEditLoading}
               dataTestId="submit-user-edition-button"
               buttonText="Save changes"
+              loaderDataTestId="submit-user-edition-button-loader"
             />
           </Box>
         </DialogContent>

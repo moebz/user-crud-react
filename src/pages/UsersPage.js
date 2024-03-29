@@ -15,7 +15,6 @@ import { CreationModal } from "../features/UserList/components/CreationModal";
 import { EditionModal } from "../features/UserList/components/EditionModal";
 import { Filter } from "../components/Filter";
 import { useUsersList } from "../features/UserList/components/UserList.hooks";
-import { useUsersCUD } from "../features/UserList/components/UserCUD.hooks";
 
 function UsersPage() {
   const editionImageInputRef = React.useRef();
@@ -28,9 +27,20 @@ function UsersPage() {
   const [selectedImage, setSelectedImage] = useState(null);
   const [isCreationModalOpen, setIsCreationModalOpen] = useState(false);
 
+  const [selectedUser, setSelectedUser] = useState(null);
+
   function showCreationForm() {
     setSelectedImage(null);
     setIsCreationModalOpen(true);
+  }
+
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+
+  const [isDeletionModalOpen, setIsDeletionModalOpen] = useState(false);
+
+  function askForDeletionConfirmation(user) {
+    setSelectedUser(user);
+    setIsDeletionModalOpen(true);
   }
 
   const {
@@ -47,42 +57,6 @@ function UsersPage() {
     createSortHandler,
     totalNumberOfPages,
   } = useUsersList({ setIsSnackbarOpen, setSnackbarMessage });
-
-  const {
-    selectedUser,
-    setSelectedUser,
-    isModalOpen,
-    isUserEditLoading,
-    isEditModalOpen,
-    isEditFormAlertOpen,
-    setIsEditFormAlertOpen,
-    editFormAlertMessage,
-    isUserDeletionLoading,
-    isDeletionFormAlertOpen,
-    setIsDeletionFormAlertOpen,
-    deletionFormAlertMessage,
-    selectedImageForEdition,
-    setSelectedImageForEdition,
-    markForChange,
-    setMarkForChange,
-    markForDeletion,
-    setMarkForDeletion,
-    handleEditModalClose,
-    askForDeletionConfirmation,
-    showEditionForm,
-    deleteUser,
-    editUser,
-    resetEditionImageInput,
-    cleanAndCloseEditionModal,
-  } = useUsersCUD({
-    getUsersAndSetState,
-    filter,
-    orderBy,
-    order,
-    setSnackbarMessage,
-    setIsSnackbarOpen,
-    editionImageInputRef,
-  });
 
   function handleSnackbarClose() {
     setIsSnackbarOpen(false);
@@ -113,35 +87,28 @@ function UsersPage() {
       />
 
       <DeletionModal
-        isModalOpen={isModalOpen}
-        handleModalClose={handleModalClose}
-        isDeletionFormAlertOpen={isDeletionFormAlertOpen}
-        setIsDeletionFormAlertOpen={setIsDeletionFormAlertOpen}
-        deletionFormAlertMessage={deletionFormAlertMessage}
-        deleteUser={deleteUser}
-        isUserDeletionLoading={isUserDeletionLoading}
+        isDeletionModalOpen={isDeletionModalOpen}
+        getUsersAndSetState={getUsersAndSetState}
+        filter={filter}
+        orderBy={orderBy}
+        order={order}
+        setSnackbarMessage={setSnackbarMessage}
+        setIsSnackbarOpen={setIsSnackbarOpen}
+        setIsDeletionModalOpen={setIsDeletionModalOpen}
+        selectedUser={selectedUser}
       />
 
       <EditionModal
         currentMilliseconds={currentMilliseconds}
         isEditModalOpen={isEditModalOpen}
-        handleEditModalClose={handleEditModalClose}
-        cleanAndCloseEditionModal={cleanAndCloseEditionModal}
-        selectedUser={selectedUser}
-        setSelectedUser={setSelectedUser}
+        getUsersAndSetState={getUsersAndSetState}
+        filter={filter}
+        orderBy={orderBy}
+        order={order}
+        setSnackbarMessage={setSnackbarMessage}
+        setIsSnackbarOpen={setIsSnackbarOpen}
         editionImageInputRef={editionImageInputRef}
-        selectedImageForEdition={selectedImageForEdition}
-        setSelectedImageForEdition={setSelectedImageForEdition}
-        isEditFormAlertOpen={isEditFormAlertOpen}
-        setIsEditFormAlertOpen={setIsEditFormAlertOpen}
-        editFormAlertMessage={editFormAlertMessage}
-        editUser={editUser}
-        isUserEditLoading={isUserEditLoading}
-        markForChange={markForChange}
-        setMarkForChange={setMarkForChange}
-        markForDeletion={markForDeletion}
-        setMarkForDeletion={setMarkForDeletion}
-        resetEditionImageInput={resetEditionImageInput}
+        setIsEditModalOpen={setIsEditModalOpen}
       />
 
       <CreationModal
@@ -155,6 +122,7 @@ function UsersPage() {
         setIsCreationModalOpen={setIsCreationModalOpen}
         selectedImage={selectedImage}
         isCreationModalOpen={isCreationModalOpen}
+        setIsModalOpen={setIsCreationModalOpen}
       />
 
       <Grid
