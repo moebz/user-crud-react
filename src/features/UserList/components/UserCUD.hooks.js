@@ -14,11 +14,6 @@ export const useUsersCUD = ({
   const [selectedUser, setSelectedUser] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const [isUserCreationLoading, setIsUserCreationLoading] = useState(false);
-  const [isCreationModalOpen, setIsCreationModalOpen] = useState(false);
-  const [isCreationFormAlertOpen, setIsCreationFormAlertOpen] = useState(false);
-  const [creationFormAlertMessage, setCreationFormAlertMessage] = useState("");
-
   const [isUserEditLoading, setIsUserEditLoading] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isEditFormAlertOpen, setIsEditFormAlertOpen] = useState(false);
@@ -41,12 +36,6 @@ export const useUsersCUD = ({
   const [markForChange, setMarkForChange] = useState(false);
   const [markForDeletion, setMarkForDeletion] = useState(false);
 
-  function handleModalClose() {
-    setIsCreationFormAlertOpen(false);
-    setCreationFormAlertMessage("");
-    setIsModalOpen(false);
-  }
-
   function handleEditModalClose() {
     setIsEditFormAlertOpen(false);
     setEditFormAlertMessage("");
@@ -62,11 +51,6 @@ export const useUsersCUD = ({
     setSelectedUser(user);
     setSelectedImageForEdition(null);
     setIsEditModalOpen(true);
-  }
-
-  function showCreationForm() {
-    setSelectedImage(null);
-    setIsCreationModalOpen(true);
   }
 
   async function deleteUser() {
@@ -147,12 +131,6 @@ export const useUsersCUD = ({
     }
   }
 
-  function cleanAndCloseCreationModal() {
-    setIsCreationFormAlertOpen(false);
-    setCreationFormAlertMessage("");
-    setIsCreationModalOpen(false);
-  }
-
   function cleanAndCloseEditionModal() {
     setMarkForDeletion(false);
     setMarkForChange(false);
@@ -170,61 +148,10 @@ export const useUsersCUD = ({
     setMarkForChange(false);
   }
 
-  async function createUser() {
-    try {
-      setIsUserCreationLoading(true);
-
-      const formData = new FormData();
-      formData.append("avatar", selectedImage);
-      formData.append("firstname", firstname);
-      formData.append("lastname", lastname);
-      formData.append("email", email);
-      formData.append("passwd", password1);
-      formData.append("passwd_confirmation", password2);
-      formData.append("username", username);
-      formData.append("role", role);
-
-      // await sleep(1000);
-
-      // throw { response: { data: { message: "prueba" } } };
-
-      const result = await api.post("/users/", formData, {
-        headers: { "Content-Type": "multipart/form-data" },
-      });
-
-      await getUsersAndSetState({
-        pageNumber: 1,
-        pageSize: DEFAULT_PAGE_SIZE,
-        filter,
-        orderBy,
-        orderDirection: order,
-      });
-
-      cleanAndCloseCreationModal();
-
-      setSnackbarMessage("User created successfully");
-    } catch (error) {
-      console.error(error);
-      setSnackbarMessage("An error occurred while trying to create the user");
-      if (error?.response?.data?.message) {
-        setCreationFormAlertMessage(error.response.data.message);
-        setIsCreationFormAlertOpen(true);
-      }
-    } finally {
-      setIsUserCreationLoading(false);
-      setIsSnackbarOpen(true);
-    }
-  }
-
   return {
     selectedUser,
     setSelectedUser,
     isModalOpen,
-    isUserCreationLoading,
-    isCreationModalOpen,
-    isCreationFormAlertOpen,
-    setIsCreationFormAlertOpen,
-    creationFormAlertMessage,
     isUserEditLoading,
     isEditModalOpen,
     isEditFormAlertOpen,
@@ -256,16 +183,12 @@ export const useUsersCUD = ({
     setMarkForChange,
     markForDeletion,
     setMarkForDeletion,
-    handleModalClose,
     handleEditModalClose,
     askForDeletionConfirmation,
     showEditionForm,
-    showCreationForm,
     deleteUser,
     editUser,
     resetEditionImageInput,
-    createUser,
     cleanAndCloseEditionModal,
-    cleanAndCloseCreationModal,
   };
 };

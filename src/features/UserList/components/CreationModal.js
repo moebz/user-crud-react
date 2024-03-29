@@ -16,34 +16,55 @@ import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import { FileInput } from "../../../components/FileInput";
 import { ButtonWithLoader } from "../../../components/ButtonWithLoader";
+import { useUserCreation } from "./UserCreation.hooks";
 
 function CreationModal({
-  isCreationModalOpen,
-  cleanAndCloseCreationModal,
-  firstname,
-  setFirstname,
-  lastname,
-  setLastname,
-  email,
-  setEmail,
-  username,
   currentMilliseconds,
-  setUsername,
-  password1,
-  setPassword1,
-  password2,
-  setPassword2,
-  role,
-  handleRoleChange,
-  imageInputRef,
+  getUsersAndSetState,
+  filter,
+  orderBy,
+  order,
+  setSnackbarMessage,
+  setIsSnackbarOpen,
+  setIsCreationModalOpen,
   selectedImage,
-  setSelectedImage,
-  isCreationFormAlertOpen,
-  setIsCreationFormAlertOpen,
-  creationFormAlertMessage,
-  createUser,
-  isUserCreationLoading,
+  isCreationModalOpen,
 }) {
+  const imageInputRef = React.useRef();
+
+  const {
+    isUserCreationLoading,
+    isCreationFormAlertOpen,
+    setIsCreationFormAlertOpen,
+    creationFormAlertMessage,
+    username,
+    setUsername,
+    password1,
+    setPassword1,
+    password2,
+    setPassword2,
+    firstname,
+    setFirstname,
+    lastname,
+    setLastname,
+    email,
+    setEmail,
+    role,
+    setSelectedImage,
+    createUser,
+    cleanAndCloseCreationModal,
+    handleRoleChange,
+  } = useUserCreation({
+    getUsersAndSetState,
+    filter,
+    orderBy,
+    order,
+    setSnackbarMessage,
+    setIsSnackbarOpen,
+    setIsCreationModalOpen,
+    selectedImage,
+  });
+
   return (
     <>
       <Dialog
@@ -165,6 +186,7 @@ function CreationModal({
               isLoading={isUserCreationLoading}
               buttonText="Add"
               dataTestId="submit-user-button"
+              loaderDataTestId="submit-user-button-loader"
             />
           </Box>
         </DialogContent>

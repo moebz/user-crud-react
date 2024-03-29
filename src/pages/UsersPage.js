@@ -18,13 +18,20 @@ import { useUsersList } from "../features/UserList/components/UserList.hooks";
 import { useUsersCUD } from "../features/UserList/components/UserCUD.hooks";
 
 function UsersPage() {
-  const imageInputRef = React.useRef();
   const editionImageInputRef = React.useRef();
 
   const currentMilliseconds = getCurrentMilliseconds();
 
   const [isSnackbarOpen, setIsSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
+
+  const [selectedImage, setSelectedImage] = useState(null);
+  const [isCreationModalOpen, setIsCreationModalOpen] = useState(false);
+
+  function showCreationForm() {
+    setSelectedImage(null);
+    setIsCreationModalOpen(true);
+  }
 
   const {
     users,
@@ -45,11 +52,6 @@ function UsersPage() {
     selectedUser,
     setSelectedUser,
     isModalOpen,
-    isUserCreationLoading,
-    isCreationModalOpen,
-    isCreationFormAlertOpen,
-    setIsCreationFormAlertOpen,
-    creationFormAlertMessage,
     isUserEditLoading,
     isEditModalOpen,
     isEditFormAlertOpen,
@@ -59,39 +61,19 @@ function UsersPage() {
     isDeletionFormAlertOpen,
     setIsDeletionFormAlertOpen,
     deletionFormAlertMessage,
-    username,
-    setUsername,
-    password1,
-    setPassword1,
-    password2,
-    setPassword2,
-    firstname,
-    setFirstname,
-    lastname,
-    setLastname,
-    email,
-    setEmail,
-    role,
-    setRole,
-    selectedImage,
-    setSelectedImage,
     selectedImageForEdition,
     setSelectedImageForEdition,
     markForChange,
     setMarkForChange,
     markForDeletion,
     setMarkForDeletion,
-    handleModalClose,
     handleEditModalClose,
     askForDeletionConfirmation,
     showEditionForm,
-    showCreationForm,
     deleteUser,
     editUser,
     resetEditionImageInput,
-    createUser,
     cleanAndCloseEditionModal,
-    cleanAndCloseCreationModal,
   } = useUsersCUD({
     getUsersAndSetState,
     filter,
@@ -104,10 +86,6 @@ function UsersPage() {
 
   function handleSnackbarClose() {
     setIsSnackbarOpen(false);
-  }
-
-  function handleRoleChange(event) {
-    setRole(event.target.value);
   }
 
   const action = (
@@ -167,31 +145,16 @@ function UsersPage() {
       />
 
       <CreationModal
-        isCreationModalOpen={isCreationModalOpen}
-        cleanAndCloseCreationModal={cleanAndCloseCreationModal}
-        firstname={firstname}
-        setFirstname={setFirstname}
-        lastname={lastname}
-        setLastname={setLastname}
-        email={email}
-        setEmail={setEmail}
-        username={username}
         currentMilliseconds={currentMilliseconds}
-        setUsername={setUsername}
-        password1={password1}
-        setPassword1={setPassword1}
-        password2={password2}
-        setPassword2={setPassword2}
-        role={role}
-        handleRoleChange={handleRoleChange}
-        imageInputRef={imageInputRef}
+        getUsersAndSetState={getUsersAndSetState}
+        filter={filter}
+        orderBy={orderBy}
+        order={order}
+        setSnackbarMessage={setSnackbarMessage}
+        setIsSnackbarOpen={setIsSnackbarOpen}
+        setIsCreationModalOpen={setIsCreationModalOpen}
         selectedImage={selectedImage}
-        setSelectedImage={setSelectedImage}
-        isCreationFormAlertOpen={isCreationFormAlertOpen}
-        setIsCreationFormAlertOpen={setIsCreationFormAlertOpen}
-        creationFormAlertMessage={creationFormAlertMessage}
-        createUser={createUser}
-        isUserCreationLoading={isUserCreationLoading}
+        isCreationModalOpen={isCreationModalOpen}
       />
 
       <Grid
