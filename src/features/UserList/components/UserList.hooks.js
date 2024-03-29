@@ -7,7 +7,6 @@ import {
 } from "../../../utils/constants";
 
 export function useUsersList({ setSnackbarMessage, setIsSnackbarOpen }) {
-  
   const [users, setUsers] = useState({
     data: [],
     status: "IDLE",
@@ -17,9 +16,9 @@ export function useUsersList({ setSnackbarMessage, setIsSnackbarOpen }) {
   const [total, setTotal] = useState(0);
   const [order, setOrder] = useState(DEFAULT_ORDER);
   const [orderBy, setOrderBy] = useState(DEFAULT_ORDER_BY);
-  
+
   const totalNumberOfPages = Math.ceil(total / DEFAULT_PAGE_SIZE);
-  
+
   async function getUsersAndSetState(params) {
     try {
       setUsers((users) => ({ ...users, status: "LOADING" }));
@@ -118,5 +117,6 @@ export function useUsersList({ setSnackbarMessage, setIsSnackbarOpen }) {
     handleApplyFilter,
     clearFilter,
     createSortHandler,
+    totalNumberOfPages,
   };
 }
