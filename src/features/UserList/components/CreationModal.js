@@ -14,8 +14,8 @@ import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
-import { FileInput } from "./FileInput";
-import { ButtonWithLoader } from "./ButtonWithLoader";
+import { FileInput } from "../../../components/FileInput";
+import { ButtonWithLoader } from "../../../components/ButtonWithLoader";
 
 function CreationModal({
   isCreationModalOpen,

@@ -18,9 +18,9 @@ import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import CheckIcon from "@mui/icons-material/Check";
-import { FileInput } from "./FileInput";
-import { ButtonWithLoader } from "./ButtonWithLoader";
-import { CurrentProfilePicture } from "./CurrentProfilePicture";
+import { FileInput } from "../../../components/FileInput";
+import { ButtonWithLoader } from "../../../components/ButtonWithLoader";
+import { CurrentProfilePicture } from "../../../components/CurrentProfilePicture";
 
 function EditionModal({
   currentMilliseconds,

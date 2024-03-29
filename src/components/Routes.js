@@ -1,11 +1,12 @@
 import React from "react";
 import { Routes as RRDRoutes, Route } from "react-router-dom";
 
-import { LoginPage } from "./../pages/LoginPage";
-import { Home } from "./../pages/Home";
-import { Landing } from "./../pages/Landing";
-import { Users } from "./../pages/Users";
 import { RequireAuth } from "./RequireAuth";
+
+import { LoginPage } from "./../pages/LoginPage";
+import { HomePage } from "../pages/HomePage";
+import { LandingPage } from "../pages/LandingPage";
+import { UsersPage } from "../pages/UsersPage";
 
 function Routes({ setCurrentUser, setCurrentUserData }) {
   return (
@@ -23,12 +24,12 @@ function Routes({ setCurrentUser, setCurrentUserData }) {
         path="/home"
         element={
           <RequireAuth>
-            <Home />
+            <HomePage />
           </RequireAuth>
         }
       />
-      <Route path="/users" element={<Users />} />
-      <Route path="/" element={<Landing />} />
+      <Route path="/users" element={<UsersPage />} />
+      <Route path="/" element={<LandingPage />} />
     </RRDRoutes>
   );
 }

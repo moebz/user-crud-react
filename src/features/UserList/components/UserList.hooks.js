@@ -1,12 +1,13 @@
 import { useState, useEffect } from "react";
-import api from "./api";
+import api from "../../../utils/api";
 import {
   DEFAULT_ORDER,
   DEFAULT_ORDER_BY,
   DEFAULT_PAGE_SIZE,
-} from "./constants";
+} from "../../../utils/constants";
 
-function useGetUsers({ setSnackbarMessage, setIsSnackbarOpen }) {
+export function useUsersList({ setSnackbarMessage, setIsSnackbarOpen }) {
+  
   const [users, setUsers] = useState({
     data: [],
     status: "IDLE",
@@ -16,7 +17,9 @@ function useGetUsers({ setSnackbarMessage, setIsSnackbarOpen }) {
   const [total, setTotal] = useState(0);
   const [order, setOrder] = useState(DEFAULT_ORDER);
   const [orderBy, setOrderBy] = useState(DEFAULT_ORDER_BY);
-
+  
+  const totalNumberOfPages = Math.ceil(total / DEFAULT_PAGE_SIZE);
+  
   async function getUsersAndSetState(params) {
     try {
       setUsers((users) => ({ ...users, status: "LOADING" }));
@@ -50,6 +53,58 @@ function useGetUsers({ setSnackbarMessage, setIsSnackbarOpen }) {
     });
   }, []);
 
+  function handlePageChange(pageNumber) {
+    getUsersAndSetState({
+      pageNumber,
+      pageSize: DEFAULT_PAGE_SIZE,
+      filter,
+      orderBy,
+      orderDirection: order,
+    });
+  }
+
+  function handleApplyFilter() {
+    getUsersAndSetState({
+      pageNumber: 1,
+      pageSize: DEFAULT_PAGE_SIZE,
+      filter,
+      orderBy,
+      orderDirection: order,
+    });
+  }
+
+  function clearFilter() {
+    setFilter("");
+    getUsersAndSetState({
+      pageNumber: 1,
+      pageSize: DEFAULT_PAGE_SIZE,
+      filter: "",
+      orderBy,
+      orderDirection: order,
+    });
+  }
+
+  function handleSortRequest(event, newOrderBy) {
+    const isAsc = orderBy === newOrderBy && order === "asc";
+    const toggledOrder = isAsc ? "desc" : "asc";
+    setOrder(toggledOrder);
+    setOrderBy(newOrderBy);
+
+    getUsersAndSetState({
+      pageNumber: currentPage,
+      pageSize: DEFAULT_PAGE_SIZE,
+      filter,
+      orderBy: newOrderBy,
+      orderDirection: toggledOrder,
+    });
+  }
+
+  function createSortHandler(newOrderBy) {
+    return function (event) {
+      handleSortRequest(event, newOrderBy);
+    };
+  }
+
   return {
     users,
     filter,
@@ -57,11 +112,11 @@ function useGetUsers({ setSnackbarMessage, setIsSnackbarOpen }) {
     currentPage,
     total,
     order,
-    setOrder,
     orderBy,
-    setOrderBy,
     getUsersAndSetState,
+    handlePageChange,
+    handleApplyFilter,
+    clearFilter,
+    createSortHandler,
   };
 }
-
-export default useGetUsers;
