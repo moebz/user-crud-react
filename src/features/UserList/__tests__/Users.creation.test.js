@@ -1,14 +1,14 @@
 import React from "react";
 import { render, screen, waitFor, act } from "@testing-library/react";
-import { Users } from "../Users";
 
-import { server } from "../../../msw/mocks";
 import { rest } from "msw";
 import httpStatus from "http-status";
 
-import userListResponse from "../../utils/testUtils/userListResponse";
 import userEvent from "@testing-library/user-event";
-import { getCurrentMilliseconds } from "../../utils/utils";
+import { server } from "../../../../msw/mocks";
+import userListResponse from "./utils/userListResponse";
+import { UsersPage } from "../../../pages/UsersPage";
+import { getCurrentMilliseconds } from "../../../utils/utils";
 
 describe("User creation", () => {
   beforeEach(() => {
@@ -21,7 +21,7 @@ describe("User creation", () => {
 
   it("opens the creation modal when the 'Add User' button is clicked", async () => {
     await act(async () => {
-      render(<Users />);
+      render(<UsersPage />);
     });
 
     await act(async () => {
@@ -50,7 +50,7 @@ describe("User creation", () => {
     // Act.
 
     await act(async () => {
-      render(<Users />);
+      render(<UsersPage />);
     });
 
     await act(async () => {
@@ -121,7 +121,7 @@ describe("User creation", () => {
     // Act.
 
     await act(async () => {
-      render(<Users />);
+      render(<UsersPage />);
     });
 
     await act(async () => {

@@ -1,11 +1,11 @@
 import React from "react";
 import { render, screen, waitFor, act } from "@testing-library/react";
-import { Users } from "../Users";
 
-import { server } from "../../../msw/mocks";
 import { rest } from "msw";
 
-import userListResponse from "../../utils/testUtils/userListResponse";
+import { server } from "../../../../msw/mocks";
+import userListResponse from "./utils/userListResponse";
+import { UsersPage } from "../../../pages/UsersPage";
 
 describe("Users component", () => {
   beforeEach(() => {
@@ -18,7 +18,7 @@ describe("Users component", () => {
 
   it("renders the title", async () => {
     await act(async () => {
-      render(<Users />);
+      render(<UsersPage />);
     });
     const titleElement = screen.getByText("User list");
     await waitFor(() => expect(titleElement).toBeInTheDocument());
@@ -26,7 +26,7 @@ describe("Users component", () => {
 
   it("renders the users table", async () => {
     await act(async () => {
-      render(<Users />);
+      render(<UsersPage />);
     });
     const usersTableElement = await screen.findByTestId("users-table");
     expect(usersTableElement).toBeInTheDocument();

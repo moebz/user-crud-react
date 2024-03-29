@@ -1,14 +1,13 @@
 import React from "react";
 import { render, screen, waitFor, act } from "@testing-library/react";
-import { Users } from "../Users";
 
-import { server } from "../../../msw/mocks";
 import { rest } from "msw";
 import httpStatus from "http-status";
 
-import userListResponse from "../../utils/testUtils/userListResponse";
 import userEvent from "@testing-library/user-event";
-import { getCurrentMilliseconds } from "../../utils/utils";
+import { UsersPage } from "../../../pages/UsersPage";
+import { server } from "../../../../msw/mocks";
+import userListResponse from "./utils/userListResponse";
 
 describe("User deletion", () => {
   beforeEach(() => {
@@ -21,7 +20,7 @@ describe("User deletion", () => {
 
   it("opens the deletion modal when the 'Delete' button is clicked", async () => {
     await act(async () => {
-      render(<Users />);
+      render(<UsersPage />);
     });
 
     await act(async () => {
@@ -52,7 +51,7 @@ describe("User deletion", () => {
     // Act.
 
     await act(async () => {
-      render(<Users />);
+      render(<UsersPage />);
     });
 
     await act(async () => {
@@ -96,7 +95,7 @@ describe("User deletion", () => {
     // Act.
 
     await act(async () => {
-      render(<Users />);
+      render(<UsersPage />);
     });
 
     await act(async () => {

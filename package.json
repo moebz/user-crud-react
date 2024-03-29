@@ -29,6 +29,9 @@
   "jest": {
     "transformIgnorePatterns": [
       "node_modules/(?!axios)/"
+    ],
+    "testMatch": [
+      "**/?(*.)+(spec|test).[tj]s?(x)"
     ]
   },
   "eslintConfig": {

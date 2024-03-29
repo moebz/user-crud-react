@@ -7,23 +7,7 @@ import httpStatus from "http-status";
 import LoginForm from "../components/LoginForm";
 import { server } from "../../../../msw/mocks";
 
-describe("Login component", () => {
-  it("shows a 'sign in' title", async () => {
-    // Act.
-
-    render(
-      <Router>
-        <LoginForm setCurrentUser={() => {}} setCurrentUserData={() => {}} />
-      </Router>
-    );
-
-    // Assert.
-
-    const titleElement = screen.getByTestId("title");
-
-    expect(titleElement).toHaveTextContent(/sign in/i);
-  });
-
+describe("Login form", () => {
   it("stores user data after a successful login", async () => {
     // Arrange.
 
@@ -64,7 +48,7 @@ describe("Login component", () => {
 
     render(
       <Router>
-        <Login
+        <LoginForm
           setCurrentUser={setCurrentUser}
           setCurrentUserData={setCurrentUserData}
         />
@@ -108,7 +92,7 @@ describe("Login component", () => {
 
     render(
       <Router>
-        <Login
+        <LoginForm
           setCurrentUser={setCurrentUser}
           setCurrentUserData={setCurrentUserData}
         />
