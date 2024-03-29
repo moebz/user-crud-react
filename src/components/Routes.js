@@ -1,7 +1,7 @@
 import React from "react";
 import { Routes as RRDRoutes, Route } from "react-router-dom";
 
-import { Login } from "./../pages/Login";
+import { LoginPage } from "./../pages/LoginPage";
 import { Home } from "./../pages/Home";
 import { Landing } from "./../pages/Landing";
 import { Users } from "./../pages/Users";
@@ -13,7 +13,7 @@ function Routes({ setCurrentUser, setCurrentUserData }) {
       <Route
         path="/login"
         element={
-          <Login
+          <LoginPage
             setCurrentUser={setCurrentUser}
             setCurrentUserData={setCurrentUserData}
           />

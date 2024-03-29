@@ -1,14 +1,14 @@
 import React from "react";
 import { render, screen, waitFor, act } from "@testing-library/react";
-import { Users } from "./Users";
+import { Users } from "../Users";
 
-import { server } from "./../../msw/mocks";
+import { server } from "../../../msw/mocks";
 import { rest } from "msw";
 import httpStatus from "http-status";
 
-import userListResponse from "../utils/testUtils/userListResponse";
+import userListResponse from "../../utils/testUtils/userListResponse";
 import userEvent from "@testing-library/user-event";
-import { getCurrentMilliseconds } from "../utils/utils";
+import { getCurrentMilliseconds } from "../../utils/utils";
 
 describe("User edition", () => {
   beforeEach(() => {

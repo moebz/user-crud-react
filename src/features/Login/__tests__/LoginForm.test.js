@@ -1,11 +1,11 @@
 import { render, screen, act } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { BrowserRouter as Router } from "react-router-dom";
-import { Login } from "./Login";
 
-import { server } from "./../../msw/mocks";
 import { rest } from "msw";
 import httpStatus from "http-status";
+import LoginForm from "../components/LoginForm";
+import { server } from "../../../../msw/mocks";
 
 describe("Login component", () => {
   it("shows a 'sign in' title", async () => {
@@ -13,7 +13,7 @@ describe("Login component", () => {
 
     render(
       <Router>
-        <Login setCurrentUser={() => {}} setCurrentUserData={() => {}} />
+        <LoginForm setCurrentUser={() => {}} setCurrentUserData={() => {}} />
       </Router>
     );
 

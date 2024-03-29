@@ -1,11 +1,11 @@
 import React from "react";
 import { render, screen, waitFor, act } from "@testing-library/react";
-import { Users } from "./Users";
+import { Users } from "../Users";
 
-import { server } from "./../../msw/mocks";
+import { server } from "../../../msw/mocks";
 import { rest } from "msw";
 
-import userListResponse from "../utils/testUtils/userListResponse";
+import userListResponse from "../../utils/testUtils/userListResponse";
 
 describe("Users component", () => {
   beforeEach(() => {
