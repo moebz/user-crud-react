@@ -11,13 +11,13 @@ export const useUsersEdition = ({
   setIsSnackbarOpen,
   editionImageInputRef,
   setIsEditModalOpen,
+  selectedImageForEdition,
+  setSelectedImageForEdition,
 }) => {
   const [selectedUser, setSelectedUser] = useState(null);
   const [isUserEditLoading, setIsUserEditLoading] = useState(false);
   const [isEditFormAlertOpen, setIsEditFormAlertOpen] = useState(false);
   const [editFormAlertMessage, setEditFormAlertMessage] = useState("");
-
-  const [selectedImageForEdition, setSelectedImageForEdition] = useState(null);
 
   const [markForChange, setMarkForChange] = useState(false);
   const [markForDeletion, setMarkForDeletion] = useState(false);
@@ -92,8 +92,6 @@ export const useUsersEdition = ({
     isEditFormAlertOpen,
     setIsEditFormAlertOpen,
     editFormAlertMessage,
-    selectedImageForEdition,
-    setSelectedImageForEdition,
     markForChange,
     setMarkForChange,
     markForDeletion,

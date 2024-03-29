@@ -32,8 +32,9 @@ function EditionModal({
   order,
   setSnackbarMessage,
   setIsSnackbarOpen,
-  editionImageInputRef,
   setIsEditModalOpen,
+  selectedImageForEdition,
+  setSelectedImageForEdition,
 }) {
   const {
     selectedUser,
@@ -42,8 +43,6 @@ function EditionModal({
     isEditFormAlertOpen,
     setIsEditFormAlertOpen,
     editFormAlertMessage,
-    selectedImageForEdition,
-    setSelectedImageForEdition,
     markForChange,
     setMarkForChange,
     markForDeletion,
@@ -60,7 +59,11 @@ function EditionModal({
     setIsSnackbarOpen,
     editionImageInputRef,
     setIsEditModalOpen,
+    selectedImageForEdition,
+    setSelectedImageForEdition,
   });
+
+  const editionImageInputRef = React.useRef();
 
   const openImageSelection = () => {
     setMarkForDeletion(false);

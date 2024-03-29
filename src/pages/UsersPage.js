@@ -17,24 +17,29 @@ import { Filter } from "../components/Filter";
 import { useUsersList } from "../features/UserList/components/UserList.hooks";
 
 function UsersPage() {
-  const editionImageInputRef = React.useRef();
-
   const currentMilliseconds = getCurrentMilliseconds();
 
   const [isSnackbarOpen, setIsSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
 
-  const [selectedImage, setSelectedImage] = useState(null);
   const [isCreationModalOpen, setIsCreationModalOpen] = useState(false);
-
-  const [selectedUser, setSelectedUser] = useState(null);
+  const [selectedImage, setSelectedImage] = useState(null);
 
   function showCreationForm() {
     setSelectedImage(null);
     setIsCreationModalOpen(true);
   }
 
+  const [selectedUser, setSelectedUser] = useState(null);
+
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [selectedImageForEdition, setSelectedImageForEdition] = useState(null);
+
+  function showEditionForm(user) {
+    setSelectedUser(user);
+    setSelectedImageForEdition(null);
+    setIsEditModalOpen(true);
+  }
 
   const [isDeletionModalOpen, setIsDeletionModalOpen] = useState(false);
 
@@ -86,31 +91,6 @@ function UsersPage() {
         data-testid="snackbar"
       />
 
-      <DeletionModal
-        isDeletionModalOpen={isDeletionModalOpen}
-        getUsersAndSetState={getUsersAndSetState}
-        filter={filter}
-        orderBy={orderBy}
-        order={order}
-        setSnackbarMessage={setSnackbarMessage}
-        setIsSnackbarOpen={setIsSnackbarOpen}
-        setIsDeletionModalOpen={setIsDeletionModalOpen}
-        selectedUser={selectedUser}
-      />
-
-      <EditionModal
-        currentMilliseconds={currentMilliseconds}
-        isEditModalOpen={isEditModalOpen}
-        getUsersAndSetState={getUsersAndSetState}
-        filter={filter}
-        orderBy={orderBy}
-        order={order}
-        setSnackbarMessage={setSnackbarMessage}
-        setIsSnackbarOpen={setIsSnackbarOpen}
-        editionImageInputRef={editionImageInputRef}
-        setIsEditModalOpen={setIsEditModalOpen}
-      />
-
       <CreationModal
         currentMilliseconds={currentMilliseconds}
         getUsersAndSetState={getUsersAndSetState}
@@ -123,6 +103,32 @@ function UsersPage() {
         selectedImage={selectedImage}
         isCreationModalOpen={isCreationModalOpen}
         setIsModalOpen={setIsCreationModalOpen}
+      />
+
+      <EditionModal
+        currentMilliseconds={currentMilliseconds}
+        isEditModalOpen={isEditModalOpen}
+        getUsersAndSetState={getUsersAndSetState}
+        filter={filter}
+        orderBy={orderBy}
+        order={order}
+        setSnackbarMessage={setSnackbarMessage}
+        setIsSnackbarOpen={setIsSnackbarOpen}
+        setIsEditModalOpen={setIsEditModalOpen}
+        selectedImageForEdition={selectedImageForEdition}
+        setSelectedImageForEdition={setSelectedImageForEdition}
+      />
+
+      <DeletionModal
+        isDeletionModalOpen={isDeletionModalOpen}
+        getUsersAndSetState={getUsersAndSetState}
+        filter={filter}
+        orderBy={orderBy}
+        order={order}
+        setSnackbarMessage={setSnackbarMessage}
+        setIsSnackbarOpen={setIsSnackbarOpen}
+        setIsDeletionModalOpen={setIsDeletionModalOpen}
+        selectedUser={selectedUser}
       />
 
       <Grid
