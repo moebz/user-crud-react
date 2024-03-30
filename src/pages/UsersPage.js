@@ -26,18 +26,18 @@ function UsersPage() {
     isCreationModalOpen,
     setIsCreationModalOpen,
     handleCreationModalOpen,
+    isEditModalOpen,
+    setIsEditModalOpen,
+    handleEditionModalOpen,
     selectedImage,
     setSelectedImage,
     selectedUser,
-    isEditModalOpen,
-    selectedImageForEdition,
-    showEditionForm,
-    isDeletionModalOpen,
-    askForDeletionConfirmation,
-    setIsEditModalOpen,
-    setSelectedImageForEdition,
     setSelectedUser,
+    selectedImageForEdition,
+    setSelectedImageForEdition,
+    isDeletionModalOpen,
     setIsDeletionModalOpen,
+    askForDeletionConfirmation,
   } = useUsersPage();
 
   const {
@@ -112,7 +112,7 @@ function UsersPage() {
         orderBy={orderBy}
         createSortHandler={createSortHandler}
         askForDeletionConfirmation={askForDeletionConfirmation}
-        showEditionForm={showEditionForm}
+        handleEditionModalOpen={handleEditionModalOpen}
       />
     </Container>
   );

@@ -16,7 +16,7 @@ function UserList({
   orderBy,
   createSortHandler,
   askForDeletionConfirmation,
-  showEditionForm,
+  handleEditionModalOpen,
 }) {
   return (
     <>
@@ -36,7 +36,7 @@ function UserList({
         orderBy={orderBy}
         createSortHandler={createSortHandler}
         askForDeletionConfirmation={askForDeletionConfirmation}
-        showEditionForm={showEditionForm}
+        handleEditionModalOpen={handleEditionModalOpen}
       />
     </>
   );

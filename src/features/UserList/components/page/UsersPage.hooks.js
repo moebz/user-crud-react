@@ -23,7 +23,7 @@ export const useUsersPage = () => {
     setIsEditModalOpen,
     selectedImageForEdition,
     setSelectedImageForEdition,
-    showEditionForm,
+    handleEditionModalOpen,
   } = useUserEditionModal({ setSelectedUser });
 
   const {
@@ -35,19 +35,19 @@ export const useUsersPage = () => {
   return {
     currentMilliseconds,
     isCreationModalOpen,
+    setIsCreationModalOpen,
+    handleCreationModalOpen,
+    isEditModalOpen,
+    setIsEditModalOpen,
+    handleEditionModalOpen,
     selectedImage,
     setSelectedImage,
-    handleCreationModalOpen,
     selectedUser,
-    isEditModalOpen,
-    selectedImageForEdition,
-    showEditionForm,
-    isDeletionModalOpen,
-    askForDeletionConfirmation,
-    setIsCreationModalOpen,
-    setIsEditModalOpen,
-    setSelectedImageForEdition,
     setSelectedUser,
+    selectedImageForEdition,
+    setSelectedImageForEdition,
+    isDeletionModalOpen,
     setIsDeletionModalOpen,
+    askForDeletionConfirmation,
   };
 };

@@ -46,7 +46,6 @@ export const useUsersEdition = ({
       setSnackbarMessage("User modified successfully");
       cleanAndCloseEditionModal();
     } catch (error) {
-      console.error(error);
       setSnackbarMessage("There was an error modifying the user");
       if (error?.response?.data?.message) {
         setEditFormAlertMessage(error.response.data.message);

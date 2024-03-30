@@ -9,7 +9,6 @@ export const useUsersDeletion = ({
   setIsDeletionModalOpen,
   selectedUser,
 }) => {
-
   const [isUserDeletionLoading, setIsUserDeletionLoading] = useState(false);
   const [isDeletionFormAlertOpen, setIsDeletionFormAlertOpen] = useState(false);
   const [deletionFormAlertMessage, setDeletionFormAlertMessage] = useState("");
@@ -26,8 +25,6 @@ export const useUsersDeletion = ({
 
       setSnackbarMessage("User deleted successfully");
     } catch (error) {
-      console.error(error);
-
       setSnackbarMessage("There was an error deleting the user");
 
       if (error?.response?.data?.message) {

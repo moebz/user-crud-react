@@ -64,7 +64,6 @@ export const useUserCreation = ({
 
       setSnackbarMessage("User created successfully");
     } catch (error) {
-      console.error(error);
       setSnackbarMessage("An error occurred while trying to create the user");
       if (error?.response?.data?.message) {
         setCreationFormAlertMessage(error.response.data.message);

@@ -4,7 +4,7 @@ export const useUserEditionModal = ({ setSelectedUser }) => {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [selectedImageForEdition, setSelectedImageForEdition] = useState(null);
 
-  function showEditionForm(user) {
+  function handleEditionModalOpen(user) {
     setSelectedUser(user);
     setSelectedImageForEdition(null);
     setIsEditModalOpen(true);
@@ -15,6 +15,6 @@ export const useUserEditionModal = ({ setSelectedUser }) => {
     setIsEditModalOpen,
     selectedImageForEdition,
     setSelectedImageForEdition,
-    showEditionForm,
+    handleEditionModalOpen,
   };
 };

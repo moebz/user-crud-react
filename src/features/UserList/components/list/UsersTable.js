@@ -62,7 +62,7 @@ function UsersTable({
   orderBy,
   createSortHandler,
   askForDeletionConfirmation,
-  showEditionForm,
+  handleEditionModalOpen,
 }) {
   return (
     <>
@@ -142,7 +142,7 @@ function UsersTable({
                         <Button
                           fullWidth
                           variant="text"
-                          onClick={() => showEditionForm(row)}
+                          onClick={() => handleEditionModalOpen(row)}
                           data-testid="edit-user-button"
                         >
                           Edit
