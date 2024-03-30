@@ -1,36 +1,39 @@
 import React from "react";
 
 import Container from "@mui/material/Container";
-import Snackbar from "@mui/material/Snackbar";
-import IconButton from "@mui/material/IconButton";
-import CloseIcon from "@mui/icons-material/Close";
 
-import { DeletionModal } from "../features/UserList/components/DeletionModal";
-import { CreationModal } from "../features/UserList/components/CreationModal";
-import { EditionModal } from "../features/UserList/components/EditionModal";
-import { useUsersList } from "../features/UserList/components/UserList.hooks";
-import { UserList } from "../features/UserList/components/UserList";
-import { useUsersPage } from "../features/UserList/components/UsersPage.hooks";
-import { TitleLine } from "../features/UserList/components/TitleLine";
+import { DeletionModal } from "../features/UserList/components/deletion/DeletionModal";
+import { CreationModal } from "../features/UserList/components/creation/CreationModal";
+import { EditionModal } from "../features/UserList/components/edition/EditionModal";
+import { useUsersList } from "../features/UserList/components/list/UserList.hooks";
+import { UserList } from "../features/UserList/components/list/UserList";
+import { useUsersPage } from "../features/UserList/components/page/UsersPage.hooks";
+import { TitleLine } from "../features/UserList/components/list/TitleLine";
+import { useSnackbar } from "../utils/useSnackbar";
+import { Snackbar } from "../components/Snackbar";
 
 function UsersPage() {
   const {
-    currentMilliseconds,
-    isSnackbarOpen,
     snackbarMessage,
     setSnackbarMessage,
+    isSnackbarOpen,
+    setIsSnackbarOpen,
     handleSnackbarClose,
+  } = useSnackbar();
+
+  const {
+    currentMilliseconds,
     isCreationModalOpen,
+    setIsCreationModalOpen,
+    handleCreationModalOpen,
     selectedImage,
-    showCreationForm,
+    setSelectedImage,
     selectedUser,
     isEditModalOpen,
     selectedImageForEdition,
     showEditionForm,
     isDeletionModalOpen,
     askForDeletionConfirmation,
-    setIsSnackbarOpen,
-    setIsCreationModalOpen,
     setIsEditModalOpen,
     setSelectedImageForEdition,
     setSelectedUser,
@@ -44,59 +47,37 @@ function UsersPage() {
     currentPage,
     order,
     orderBy,
-    getUsersAndSetState,
     handlePageChange,
     handleApplyFilter,
     clearFilter,
     createSortHandler,
     totalNumberOfPages,
+    loadFirstPage,
   } = useUsersList({ setIsSnackbarOpen, setSnackbarMessage });
-
-  const action = (
-    <React.Fragment>
-      <IconButton
-        size="small"
-        aria-label="close"
-        color="inherit"
-        onClick={handleSnackbarClose}
-      >
-        <CloseIcon fontSize="small" />
-      </IconButton>
-    </React.Fragment>
-  );
 
   return (
     <Container component="main" sx={{ marginTop: 2 }}>
       <Snackbar
-        open={isSnackbarOpen}
-        autoHideDuration={6000}
-        onClose={handleSnackbarClose}
-        message={snackbarMessage}
-        action={action}
-        data-testid="snackbar"
+        isSnackbarOpen={isSnackbarOpen}
+        handleSnackbarClose={handleSnackbarClose}
+        snackbarMessage={snackbarMessage}
       />
 
       <CreationModal
         currentMilliseconds={currentMilliseconds}
-        getUsersAndSetState={getUsersAndSetState}
-        filter={filter}
-        orderBy={orderBy}
-        order={order}
         setSnackbarMessage={setSnackbarMessage}
         setIsSnackbarOpen={setIsSnackbarOpen}
         setIsCreationModalOpen={setIsCreationModalOpen}
-        selectedImage={selectedImage}
         isCreationModalOpen={isCreationModalOpen}
-        setIsModalOpen={setIsCreationModalOpen}
+        loadFirstPage={loadFirstPage}
+        selectedImage={selectedImage}
+        setSelectedImage={setSelectedImage}
       />
 
       <EditionModal
         currentMilliseconds={currentMilliseconds}
         isEditModalOpen={isEditModalOpen}
-        getUsersAndSetState={getUsersAndSetState}
-        filter={filter}
-        orderBy={orderBy}
-        order={order}
+        loadFirstPage={loadFirstPage}
         setSnackbarMessage={setSnackbarMessage}
         setIsSnackbarOpen={setIsSnackbarOpen}
         setIsEditModalOpen={setIsEditModalOpen}
@@ -108,17 +89,14 @@ function UsersPage() {
 
       <DeletionModal
         isDeletionModalOpen={isDeletionModalOpen}
-        getUsersAndSetState={getUsersAndSetState}
-        filter={filter}
-        orderBy={orderBy}
-        order={order}
+        loadFirstPage={loadFirstPage}
         setSnackbarMessage={setSnackbarMessage}
         setIsSnackbarOpen={setIsSnackbarOpen}
         setIsDeletionModalOpen={setIsDeletionModalOpen}
         selectedUser={selectedUser}
       />
 
-      <TitleLine showCreationForm={showCreationForm} />
+      <TitleLine handleCreationModalOpen={handleCreationModalOpen} />
 
       <UserList
         setFilter={setFilter}

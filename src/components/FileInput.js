@@ -14,9 +14,8 @@ function FileInput({
   imageInputRef,
   selectedImage,
   setSelectedImage,
-  setMarkForChange,
-  openImageSelection,
-  reset,
+  openImageSelection = null,
+  reset = null,
 }) {
   const [preview, setPreview] = useState("");
 

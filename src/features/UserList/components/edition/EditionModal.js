@@ -18,18 +18,15 @@ import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import CheckIcon from "@mui/icons-material/Check";
-import { FileInput } from "../../../components/FileInput";
-import { ButtonWithLoader } from "../../../components/ButtonWithLoader";
-import { CurrentProfilePicture } from "../../../components/CurrentProfilePicture";
+import { FileInput } from "../../../../components/FileInput";
+import { ButtonWithLoader } from "../../../../components/ButtonWithLoader";
+import { CurrentProfilePicture } from "../../../../components/CurrentProfilePicture";
 import { useUsersEdition } from "./UserEdition.hooks";
 
 function EditionModal({
   currentMilliseconds,
   isEditModalOpen,
-  getUsersAndSetState,
-  filter,
-  orderBy,
-  order,
+  loadFirstPage,
   setSnackbarMessage,
   setIsSnackbarOpen,
   setIsEditModalOpen,
@@ -53,10 +50,7 @@ function EditionModal({
     resetEditionImageInput,
     cleanAndCloseEditionModal,
   } = useUsersEdition({
-    getUsersAndSetState,
-    filter,
-    orderBy,
-    order,
+    loadFirstPage,
     setSnackbarMessage,
     setIsSnackbarOpen,
     editionImageInputRef,

@@ -1,17 +1,12 @@
 import { useState } from "react";
-import api from "../../../utils/api";
-import { DEFAULT_PAGE_SIZE } from "../../../utils/constants";
+import api from "../../../../utils/api";
 
 export const useUserCreation = ({
-  getUsersAndSetState,
-  filter,
-  orderBy,
-  order,
   setSnackbarMessage,
   setIsSnackbarOpen,
   setIsCreationModalOpen,
+  loadFirstPage,
   selectedImage,
-  setIsModalOpen,
 }) => {
   const [isUserCreationLoading, setIsUserCreationLoading] = useState(false);
   const [isCreationFormAlertOpen, setIsCreationFormAlertOpen] = useState(false);
@@ -25,9 +20,6 @@ export const useUserCreation = ({
   const [email, setEmail] = useState("");
   const [role, setRole] = useState("standard");
 
-  const [markForChange, setMarkForChange] = useState(false);
-  const [markForDeletion, setMarkForDeletion] = useState(false);
-
   function handleRoleChange(event) {
     setRole(event.target.value);
   }
@@ -35,7 +27,7 @@ export const useUserCreation = ({
   function handleModalClose() {
     setIsCreationFormAlertOpen(false);
     setCreationFormAlertMessage("");
-    setIsModalOpen(false);
+    setIsCreationModalOpen(false);
   }
 
   function cleanAndCloseCreationModal() {
@@ -66,13 +58,7 @@ export const useUserCreation = ({
         headers: { "Content-Type": "multipart/form-data" },
       });
 
-      await getUsersAndSetState({
-        pageNumber: 1,
-        pageSize: DEFAULT_PAGE_SIZE,
-        filter,
-        orderBy,
-        orderDirection: order,
-      });
+      await loadFirstPage();
 
       cleanAndCloseCreationModal();
 
@@ -109,10 +95,6 @@ export const useUserCreation = ({
     setEmail,
     role,
     setRole,
-    markForChange,
-    setMarkForChange,
-    markForDeletion,
-    setMarkForDeletion,
     handleModalClose,
     createUser,
     cleanAndCloseCreationModal,

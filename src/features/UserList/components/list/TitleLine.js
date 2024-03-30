@@ -2,9 +2,9 @@ import React from "react";
 
 import Button from "@mui/material/Button";
 import { Grid } from "@mui/material";
-import Title from "../../../components/Title";
+import Title from "../../../../components/Title";
 
-function TitleLine({ showCreationForm }) {
+function TitleLine({ handleCreationModalOpen }) {
   return (
     <Grid
       container
@@ -18,7 +18,7 @@ function TitleLine({ showCreationForm }) {
         type="submit"
         variant="contained"
         sx={{ mb: 3 }}
-        onClick={showCreationForm}
+        onClick={handleCreationModalOpen}
         data-testid="create-user-button"
       >
         Add new user

@@ -1,16 +1,18 @@
 import { useState, useEffect } from "react";
-import api from "../../../utils/api";
+import api from "../../../../utils/api";
 import {
   DEFAULT_ORDER,
   DEFAULT_ORDER_BY,
   DEFAULT_PAGE_SIZE,
-} from "../../../utils/constants";
+} from "../../../../utils/constants";
+import { useSnackbar } from "../../../../utils/useSnackbar";
 
-export function useUsersList({ setSnackbarMessage, setIsSnackbarOpen }) {
+export function useUsersList({ setIsSnackbarOpen, setSnackbarMessage }) {
   const [users, setUsers] = useState({
     data: [],
     status: "IDLE",
   });
+
   const [filter, setFilter] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [total, setTotal] = useState(0);
@@ -104,6 +106,16 @@ export function useUsersList({ setSnackbarMessage, setIsSnackbarOpen }) {
     };
   }
 
+  async function loadFirstPage() {
+    await getUsersAndSetState({
+      pageNumber: 1,
+      pageSize: DEFAULT_PAGE_SIZE,
+      filter,
+      orderBy,
+      orderDirection: order,
+    });
+  }
+
   return {
     users,
     filter,
@@ -112,11 +124,11 @@ export function useUsersList({ setSnackbarMessage, setIsSnackbarOpen }) {
     total,
     order,
     orderBy,
-    getUsersAndSetState,
     handlePageChange,
     handleApplyFilter,
     clearFilter,
     createSortHandler,
     totalNumberOfPages,
+    loadFirstPage,
   };
 }

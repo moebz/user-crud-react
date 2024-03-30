@@ -14,22 +14,19 @@ import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
-import { FileInput } from "../../../components/FileInput";
-import { ButtonWithLoader } from "../../../components/ButtonWithLoader";
+import { FileInput } from "../../../../components/FileInput";
+import { ButtonWithLoader } from "../../../../components/ButtonWithLoader";
 import { useUserCreation } from "./UserCreation.hooks";
 
 function CreationModal({
   currentMilliseconds,
-  getUsersAndSetState,
-  filter,
-  orderBy,
-  order,
   setSnackbarMessage,
   setIsSnackbarOpen,
   setIsCreationModalOpen,
-  selectedImage,
   isCreationModalOpen,
-  setIsModalOpen,
+  loadFirstPage,
+  selectedImage,
+  setSelectedImage,
 }) {
   const imageInputRef = React.useRef();
 
@@ -51,20 +48,15 @@ function CreationModal({
     email,
     setEmail,
     role,
-    setSelectedImage,
     createUser,
     cleanAndCloseCreationModal,
     handleRoleChange,
   } = useUserCreation({
-    getUsersAndSetState,
-    filter,
-    orderBy,
-    order,
     setSnackbarMessage,
     setIsSnackbarOpen,
     setIsCreationModalOpen,
+    loadFirstPage,
     selectedImage,
-    setIsModalOpen,
   });
 
   return (

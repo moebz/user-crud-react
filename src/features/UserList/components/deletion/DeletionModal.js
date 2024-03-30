@@ -9,15 +9,12 @@ import {
 } from "@mui/material";
 import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
-import { ButtonWithLoader } from "../../../components/ButtonWithLoader";
+import { ButtonWithLoader } from "../../../../components/ButtonWithLoader";
 import { useUsersDeletion } from "./UserDeletion.hooks";
 
 function DeletionModal({
   isDeletionModalOpen,
-  getUsersAndSetState,
-  filter,
-  orderBy,
-  order,
+  loadFirstPage,
   setSnackbarMessage,
   setIsSnackbarOpen,
   setIsDeletionModalOpen,
@@ -30,10 +27,7 @@ function DeletionModal({
     deletionFormAlertMessage,
     deleteUser,
   } = useUsersDeletion({
-    getUsersAndSetState,
-    filter,
-    orderBy,
-    order,
+    loadFirstPage,
     setSnackbarMessage,
     setIsSnackbarOpen,
     setIsDeletionModalOpen,

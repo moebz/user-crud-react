@@ -1,12 +1,9 @@
 import { useState } from "react";
-import api from "../../../utils/api";
-import { DEFAULT_PAGE_SIZE } from "../../../utils/constants";
+import api from "../../../../utils/api";
+import { DEFAULT_PAGE_SIZE } from "../../../../utils/constants";
 
 export const useUsersDeletion = ({
-  getUsersAndSetState,
-  filter,
-  orderBy,
-  order,
+  loadFirstPage,
   setSnackbarMessage,
   setIsSnackbarOpen,
   setIsDeletionModalOpen,
@@ -23,13 +20,7 @@ export const useUsersDeletion = ({
 
       await api.delete(`/users/${selectedUser.id}`);
 
-      await getUsersAndSetState({
-        pageNumber: 1,
-        pageSize: DEFAULT_PAGE_SIZE,
-        filter,
-        orderBy,
-        orderDirection: order,
-      });
+      await loadFirstPage();
 
       setIsDeletionModalOpen(false);
 

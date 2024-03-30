@@ -1,12 +1,8 @@
 import { useState } from "react";
-import api from "../../../utils/api";
-import { DEFAULT_PAGE_SIZE } from "../../../utils/constants";
+import api from "../../../../utils/api";
 
 export const useUsersEdition = ({
-  getUsersAndSetState,
-  filter,
-  orderBy,
-  order,
+  loadFirstPage,
   setSnackbarMessage,
   setIsSnackbarOpen,
   editionImageInputRef,
@@ -14,7 +10,6 @@ export const useUsersEdition = ({
   selectedImageForEdition,
   setSelectedImageForEdition,
   selectedUser,
-  setSelectedUser,
 }) => {
   const [isUserEditLoading, setIsUserEditLoading] = useState(false);
   const [isEditFormAlertOpen, setIsEditFormAlertOpen] = useState(false);
@@ -45,13 +40,7 @@ export const useUsersEdition = ({
         headers: { "Content-Type": "multipart/form-data" },
       });
 
-      await getUsersAndSetState({
-        pageNumber: 1,
-        pageSize: DEFAULT_PAGE_SIZE,
-        filter,
-        orderBy,
-        orderDirection: order,
-      });
+      await loadFirstPage();
 
       setIsEditModalOpen(false);
       setSnackbarMessage("User modified successfully");
