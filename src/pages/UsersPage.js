@@ -2,15 +2,13 @@ import React from "react";
 
 import Container from "@mui/material/Container";
 
-import { DeletionModal } from "../features/UserList/components/deletion/DeletionModal";
-import { CreationModal } from "../features/UserList/components/creation/CreationModal";
-import { EditionModal } from "../features/UserList/components/edition/EditionModal";
-import { useUsersList } from "../features/UserList/components/list/UserList.hooks";
-import { UserList } from "../features/UserList/components/list/UserList";
-import { useUsersPage } from "../features/UserList/components/page/UsersPage.hooks";
-import { TitleLine } from "../features/UserList/components/list/TitleLine";
-import { useSnackbar } from "../utils/useSnackbar";
 import { Snackbar } from "../components/Snackbar";
+import { useSnackbar } from "../utils/useSnackbar";
+import { UserModals } from "../features/UserList/components/page/UserModals";
+import { TitleLine } from "../features/UserList/components/list/TitleLine";
+import { UserList } from "../features/UserList/components/list/UserList";
+import { useUsersList } from "../features/UserList/components/list/UserList.hooks";
+import { useUsersPage } from "../features/UserList/components/page/UsersPage.hooks";
 
 function UsersPage() {
   const {
@@ -63,37 +61,23 @@ function UsersPage() {
         snackbarMessage={snackbarMessage}
       />
 
-      <CreationModal
+      <UserModals
         currentMilliseconds={currentMilliseconds}
+        isCreationModalOpen={isCreationModalOpen}
+        setIsCreationModalOpen={setIsCreationModalOpen}
+        isEditModalOpen={isEditModalOpen}
+        setIsEditModalOpen={setIsEditModalOpen}
+        isDeletionModalOpen={isDeletionModalOpen}
+        setIsDeletionModalOpen={setIsDeletionModalOpen}
+        loadFirstPage={loadFirstPage}
         setSnackbarMessage={setSnackbarMessage}
         setIsSnackbarOpen={setIsSnackbarOpen}
-        setIsCreationModalOpen={setIsCreationModalOpen}
-        isCreationModalOpen={isCreationModalOpen}
-        loadFirstPage={loadFirstPage}
         selectedImage={selectedImage}
         setSelectedImage={setSelectedImage}
-      />
-
-      <EditionModal
-        currentMilliseconds={currentMilliseconds}
-        isEditModalOpen={isEditModalOpen}
-        loadFirstPage={loadFirstPage}
-        setSnackbarMessage={setSnackbarMessage}
-        setIsSnackbarOpen={setIsSnackbarOpen}
-        setIsEditModalOpen={setIsEditModalOpen}
         selectedImageForEdition={selectedImageForEdition}
         setSelectedImageForEdition={setSelectedImageForEdition}
         selectedUser={selectedUser}
         setSelectedUser={setSelectedUser}
-      />
-
-      <DeletionModal
-        isDeletionModalOpen={isDeletionModalOpen}
-        loadFirstPage={loadFirstPage}
-        setSnackbarMessage={setSnackbarMessage}
-        setIsSnackbarOpen={setIsSnackbarOpen}
-        setIsDeletionModalOpen={setIsDeletionModalOpen}
-        selectedUser={selectedUser}
       />
 
       <TitleLine handleCreationModalOpen={handleCreationModalOpen} />
